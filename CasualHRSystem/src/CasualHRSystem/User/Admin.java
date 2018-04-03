@@ -16,7 +16,7 @@ public class Admin extends User{
         this.setUserType("admin");
     }
      
-    public void showMenu(){
+    public static void showMenu(){
         System.out.println("    (1) Manage Payrolls");
         System.out.println("    (2) Generate Report");
         System.out.println("    (3) Add Staff");

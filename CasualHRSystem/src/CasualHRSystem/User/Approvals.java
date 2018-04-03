@@ -16,7 +16,7 @@ public class Approvals extends User {
         this.setUserType("approvals");
     }
     
-    public void showMenu(){
+    public static void showMenu(){
         System.out.println("    (1) View Applications/Requests");
     }
 }

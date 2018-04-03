@@ -16,7 +16,7 @@ public class CourseCoordinator extends User {
         this.setUserType("course_coordinator");
     }    
     
-    public void showMenu(){
+    public static void showMenu(){
         System.out.println("    (1) Manage Requests");
         System.out.println("    (2) Assign Tasks");
         System.out.println("    (3) Add Course");

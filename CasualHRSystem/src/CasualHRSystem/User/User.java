@@ -148,8 +148,11 @@ public class User {
         this.dateAdded = dateAdded;
     }
     
-    public void showMenu(){
-        System.out.println("Welcome " + this.getFirstName() + " " + this.getLastName());
+    public void welcomeMessage(){
+        System.out.println("Welcome " + this.getFirstName() + ". You are now logged in.");
+    }
+    
+    public static void showMenu(){
         System.out.println("  Please Select an Option:");
     }
     

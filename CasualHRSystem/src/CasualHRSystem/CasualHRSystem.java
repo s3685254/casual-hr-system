@@ -5,7 +5,7 @@
  */
 package CasualHRSystem;
 
-import CasualHRSystem.User.User;
+import CasualHRSystem.User.*;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 import com.j256.ormlite.dao.*;
@@ -67,8 +67,14 @@ public class CasualHRSystem {
             conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
             System.out.println("Connection to SQLite has been established.");
 
-
-            DatabaseDriver.login();
+            User currentUser;
+            currentUser = DatabaseDriver.login();
+            if(currentUser!=null){
+                currentUser.welcomeMessage();
+                currentUser.showMenu();
+            } else {
+                System.out.println("Incorrect Credentials.");
+            }
             // instantiate the dao (database access object)
             ////TableUtils.createTable(conn, User.class);
             ////Dao<User, String> accountDao = DaoManager.createDao(conn, User.class);

@@ -20,10 +20,8 @@ import java.util.Scanner;
  * @author jye
  */
 public class DatabaseDriver {
-    
-    public int currentUser;
-    
-    public void login(){
+        
+    public static User login(){
         
     ConnectionSource conn = null;
         try{
@@ -47,8 +45,7 @@ public class DatabaseDriver {
         List<User> accountList = accountDao.query(preparedQuery);
         for(User i:accountList){
             if(passwordToCheck.equals(i.getPassword())){
-               currentUser = i.getUserID();
-               i.showMenu();
+               return i;
            }
         }
       } catch (Exception e) {
@@ -62,7 +59,6 @@ public class DatabaseDriver {
                 System.out.println(ex.getMessage());
             }
         }
+        return null;
     }
-    
-    
 }
