@@ -16,6 +16,11 @@ public class Approvals extends User {
         this.setUserType("approvals");
     }
     
+    public Approvals(int userID, String firstName, String lastName, String email, String userType, String password, String date) {
+        super(userID, firstName, lastName, email, userType, password);
+        this.setDateAdded(date);
+    }
+    
     public static void showMenu(){
         System.out.println("    (1) View Applications/Requests");
     }

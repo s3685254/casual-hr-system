@@ -10,12 +10,15 @@ import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 import com.j256.ormlite.dao.*;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
+import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import java.io.Reader;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -24,6 +27,8 @@ import java.util.Scanner;
  * @author jye
  */
 public class CasualHRSystem {
+    
+    static String VERSION_NUMBER = "0.1";
 
     public void createUserTable(){
         ConnectionSource conn= null;
@@ -61,7 +66,7 @@ public class CasualHRSystem {
     public static void main(String[] args) {
         ConnectionSource conn= null;
         
-
+        System.out.println("--Welcome to Casual HR System (v. " + VERSION_NUMBER + ") --");
             
         try {
             conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
@@ -71,16 +76,26 @@ public class CasualHRSystem {
             currentUser = DatabaseDriver.login();
             if(currentUser!=null){
                 currentUser.welcomeMessage();
+                if(currentUser.getUserType().equals("admin")){
+                    Admin.showMenu();
+                } else if(currentUser.getUserType().equals("approvals")){
+                    Approvals.showMenu();
+                } else if(currentUser.getUserType().equals("course_coordinator")){
+                    CourseCoordinator.showMenu();
+                } else {
+                    CasualStaffMember.showMenu();
+                }
+                
                 currentUser.showMenu();
             } else {
                 System.out.println("Incorrect Credentials.");
             }
             // instantiate the dao (database access object)
             ////TableUtils.createTable(conn, User.class);
-            ////Dao<User, String> accountDao = DaoManager.createDao(conn, User.class);
+            ///Dao<User, String> accountDao = DaoManager.createDao(conn, User.class);
 
 
-            ////User user = new User(0, "Jye", "Lake", "jyelake@hotmail.com", "admin", "password");
+            ////User user = new User(2, "Jye", "Lake", "jyelake2@hotmail.com", "admin", "password");
             ////accountDao.create(user);
 
 
@@ -90,8 +105,11 @@ public class CasualHRSystem {
             // get our query builder from the DAO
 
 
+      // query for all accounts that have "qwerty" as a password
+
+
             
-            ////conn.close();
+            conn.close();
 
 
         } catch (Exception e) {

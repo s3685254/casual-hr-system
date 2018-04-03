@@ -61,4 +61,72 @@ public class DatabaseDriver {
         }
         return null;
     }
+    
+    public void addStaff(){
+        User newUser = new User();
+            ConnectionSource conn = null;
+        Scanner scanner = new Scanner(System.in);
+                try{
+
+         conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
+         
+        Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
+        QueryBuilder<User, Integer> userQuery = accountDao.queryBuilder();
+        userQuery.orderBy("userID", false).limit(1L).prepare();
+        PreparedQuery<User> preparedQuery = userQuery.prepare();
+
+        List<User> accountList = accountDao.query(preparedQuery);
+            
+        newUser.setUserID(accountList.get(0).userID+1);
+         
+        System.out.println("Please enter the details of the new user:");
+        System.out.print("First Name: ");
+        newUser.setFirstName(scanner.next());        
+        System.out.println();
+        System.out.print("Surname: ");
+        newUser.setLastName(scanner.next());         
+        System.out.println();
+        System.out.print("Email Address: ");
+        newUser.setEmail(scanner.next());        
+        System.out.println();
+        System.out.print("User Type (1 for admin, 2 for approvals, "
+                + "3 for course coordinator, 4 for casual staff member): ");
+        
+        int user_type = scanner.nextInt();
+        switch(user_type){
+            case 1:
+                newUser.setUserType("admin");
+                break;
+                
+            case 2:
+                newUser.setUserType("approvals");
+                break;
+                
+            case 3:
+                newUser.setUserType("course_coordinator");
+                break;
+                
+            case 4:
+                newUser.setUserType("admin");
+                break;
+        }
+
+        accountDao.create(newUser);
+        conn.close();
+        
+      } catch (Exception e) {
+            System.out.println(e.getMessage());
+      }  finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
+        
+        
 }
+

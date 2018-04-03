@@ -5,6 +5,8 @@
  */
 package CasualHRSystem.User;
 
+import java.util.Date;
+
 /**
  *
  * @author jye
@@ -16,6 +18,11 @@ public class Admin extends User{
         this.setUserType("admin");
     }
      
+    public Admin(int userID, String firstName, String lastName, String email, String userType, String password, String date) {
+        super(userID, firstName, lastName, email, userType, password);
+        this.setDateAdded(date);
+    }
+    
     public static void showMenu(){
         System.out.println("    (1) Manage Payrolls");
         System.out.println("    (2) Generate Report");
