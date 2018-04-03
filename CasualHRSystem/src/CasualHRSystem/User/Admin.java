@@ -15,5 +15,11 @@ public class Admin extends User{
         super();
         this.setUserType("admin");
     }
-        
+     
+    public void showMenu(){
+        System.out.println("    (1) Manage Payrolls");
+        System.out.println("    (2) Generate Report");
+        System.out.println("    (3) Add Staff");
+    }
+    
 }

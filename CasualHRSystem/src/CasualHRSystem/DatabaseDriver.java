@@ -21,8 +21,9 @@ import java.util.Scanner;
  */
 public class DatabaseDriver {
     
+    public int currentUser;
     
-    public static void login(){
+    public void login(){
         
     ConnectionSource conn = null;
         try{
@@ -45,8 +46,9 @@ public class DatabaseDriver {
 
         List<User> accountList = accountDao.query(preparedQuery);
         for(User i:accountList){
-            if(passwordToCheck==i.getPassword()){
-               System.out.println("Welcome " + i.getFirstName());
+            if(passwordToCheck.equals(i.getPassword())){
+               currentUser = i.getUserID();
+               i.showMenu();
            }
         }
       } catch (Exception e) {
@@ -61,4 +63,6 @@ public class DatabaseDriver {
             }
         }
     }
+    
+    
 }

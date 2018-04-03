@@ -148,7 +148,10 @@ public class User {
         this.dateAdded = dateAdded;
     }
     
-
+    public void showMenu(){
+        System.out.println("Welcome " + this.getFirstName() + " " + this.getLastName());
+        System.out.println("  Please Select an Option:");
+    }
     
 }
 

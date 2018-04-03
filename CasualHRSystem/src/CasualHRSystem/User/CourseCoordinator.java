@@ -16,4 +16,11 @@ public class CourseCoordinator extends User {
         this.setUserType("course_coordinator");
     }    
     
+    public void showMenu(){
+        System.out.println("    (1) Manage Requests");
+        System.out.println("    (2) Assign Tasks");
+        System.out.println("    (3) Add Course");
+        System.out.println("    (4) Modify Course");
+        System.out.println("    (5) View Timetable");
+    }
 }
