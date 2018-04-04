@@ -20,7 +20,7 @@ import java.util.Scanner;
  * @author jye
  */
 public class DatabaseDriver {
-        
+    
     public static User login(){
         
     ConnectionSource conn = null;
@@ -62,7 +62,7 @@ public class DatabaseDriver {
         return null;
     }
     
-    public void addStaff(){
+    public static void addStaff(){
         User newUser = new User();
             ConnectionSource conn = null;
         Scanner scanner = new Scanner(System.in);
@@ -89,6 +89,9 @@ public class DatabaseDriver {
         System.out.print("Email Address: ");
         newUser.setEmail(scanner.next());        
         System.out.println();
+        System.out.print("Password: ");
+        newUser.setPassword(scanner.next());         
+        System.out.println();
         System.out.print("User Type (1 for admin, 2 for approvals, "
                 + "3 for course coordinator, 4 for casual staff member): ");
         
@@ -111,6 +114,7 @@ public class DatabaseDriver {
                 break;
         }
 
+        newUser.setDateAdded();
         accountDao.create(newUser);
         conn.close();
         
@@ -127,6 +131,18 @@ public class DatabaseDriver {
         }
     }
         
+    
+    public static void viewPayroll(){
+        System.out.println("Sorry, this feature is not yet implemented.");
+    }
+    
+    public static void reportGeneratorMenu(){
+        System.out.println("Sorry, this feature is not yet implemented.");
+    }
+    
+    public static void generateReport(){
         
+    }
+    
 }
 
