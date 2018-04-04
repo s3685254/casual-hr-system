@@ -144,8 +144,12 @@ public class User {
     /**
      * @param dateAdded the dateAdded to set
      */
-    public void setDateAdded(String dateAdded) {
-        this.dateAdded = dateAdded;
+        public void setDateAdded(String date) {
+        this.dateAdded = date;
+    }
+    
+    public void setDateAdded() {
+        this.dateAdded = new Date().toString();
     }
     
     public void welcomeMessage(){

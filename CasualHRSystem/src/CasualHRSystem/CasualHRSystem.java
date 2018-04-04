@@ -29,7 +29,8 @@ import java.util.Scanner;
 public class CasualHRSystem {
     
     static String VERSION_NUMBER = "0.1";
-
+    
+    
     public void createUserTable(){
         ConnectionSource conn= null;
         try {
@@ -70,7 +71,7 @@ public class CasualHRSystem {
             
         try {
             conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
-            System.out.println("Connection to SQLite has been established.");
+            //System.out.println("Connection to SQLite has been established.");
 
             User currentUser;
             currentUser = DatabaseDriver.login();
@@ -107,8 +108,6 @@ public class CasualHRSystem {
 
       // query for all accounts that have "qwerty" as a password
 
-
-            
             conn.close();
 
 

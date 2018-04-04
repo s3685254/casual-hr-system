@@ -12,5 +12,16 @@ package CasualHRSystem;
 public class Payslip {
     int payslipID;
     String date;
+    int hoursWorked;
     float amount;
+    
+    public void sendPayslip(){
+        
+    }
+    
+    public void modifyPayslip(int newHoursWorked, float newAmount){
+        this.hoursWorked = newHoursWorked;
+        this.amount = newAmount;
+    };
+    
 }
