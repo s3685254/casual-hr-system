@@ -77,17 +77,9 @@ public class CasualHRSystem {
             currentUser = DatabaseDriver.login();
             if(currentUser!=null){
                 currentUser.welcomeMessage();
-                if(currentUser.getUserType().equals("admin")){
-                    Admin.showMenu();
-                } else if(currentUser.getUserType().equals("approvals")){
-                    Approvals.showMenu();
-                } else if(currentUser.getUserType().equals("course_coordinator")){
-                    CourseCoordinator.showMenu();
-                } else {
-                    CasualStaffMember.showMenu();
-                }
                 
-                currentUser.showMenu();
+                System.out.println("(1) Add User/Staff");
+                
             } else {
                 System.out.println("Incorrect Credentials.");
             }
