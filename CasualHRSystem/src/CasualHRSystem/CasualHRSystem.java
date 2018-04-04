@@ -80,6 +80,11 @@ public class CasualHRSystem {
                     Admin.showMenu();
                 } else if(currentUser.getUserType().equals("approvals")){
                     Approvals.showMenu();
+                    Scanner scanner = new Scanner(System.in);
+                    int choice = scanner.nextInt();
+                    if (choice == 1){
+                        RequestDriver.showMenu();
+                    }
                 } else if(currentUser.getUserType().equals("course_coordinator")){
                     CourseCoordinator.showMenu();
                 } else {

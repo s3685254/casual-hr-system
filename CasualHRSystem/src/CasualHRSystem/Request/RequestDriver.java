@@ -11,4 +11,10 @@ package CasualHRSystem.Request;
  */
 public class RequestDriver {
     
+    public static void showMenu(){
+        System.out.println("    (1) View Request");
+        System.out.println("    (2) Approve Request");
+        System.out.println("    (3) Decline Request");
+        System.out.println("    (4) Notify Applicant");
+    }
 }
