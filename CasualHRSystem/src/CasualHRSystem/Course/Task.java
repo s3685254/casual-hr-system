@@ -10,5 +10,19 @@ package CasualHRSystem.Course;
  * @author jye
  */
 public class Task {
+    int courseID;
+    int id;
+    float basePayRate;
+    boolean recurring;
+    int minStaff;
+    
+    void addActivity(){
+    
+    }
+    
+    void modifyTask(){
+        
+    }
     
 }
+

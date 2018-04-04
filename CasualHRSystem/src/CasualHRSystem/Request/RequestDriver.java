@@ -11,4 +11,16 @@ package CasualHRSystem.Request;
  */
 public class RequestDriver {
     
+    void createRequest(){
+        
+    }
+    
+    void viewRequests(){
+        
+    }
+    
+    void generateReport(){
+        
+    }
+    
 }
