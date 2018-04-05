@@ -5,6 +5,8 @@
  */
 package CasualHRSystem.User;
 
+import java.util.Scanner;
+
 /**
  *
  * @author jye
@@ -23,5 +25,11 @@ public class Approvals extends User {
     
     public static void showMenu(){
         System.out.println("    (1) View Applications/Requests");
+        
+        Scanner scanner = new Scanner(System.in);
+        int user_type = scanner.nextInt();
+        if (user_type == 1){
+            RequestDriver.viewRequest();
+        }
     }
 }

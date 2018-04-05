@@ -11,4 +11,12 @@ package CasualHRSystem.Request;
  */
 public class CourseApplication extends Request {
     String resume;
+    
+    public String getResume(){
+        return resume;
+    }
+    
+    public void setResume(String resume){
+        this.resume = resume;
+    }
 }
