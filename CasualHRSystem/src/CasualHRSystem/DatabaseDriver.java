@@ -31,9 +31,8 @@ public class DatabaseDriver {
             conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
             File db = new File("chrsDB.db");
             TableUtils.createTable(conn, User.class);
-            
-            /*
             TableUtils.createTable(conn, Course.class);
+            /*
             TableUtils.createTable(conn, Task.class);
             TableUtils.createTable(conn, Activity.class);
             TableUtils.createTable(conn, CourseApplication.class);
@@ -172,6 +171,39 @@ public class DatabaseDriver {
         }
     }
         
+    
+    public static void viewStaff(){
+            ConnectionSource conn = null;
+        Scanner scanner = new Scanner(System.in);
+                try{
+
+         conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
+         
+        Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
+        QueryBuilder<User, Integer> userQuery = accountDao.queryBuilder();
+        userQuery.orderBy("userID", false).prepare();
+        PreparedQuery<User> preparedQuery = userQuery.prepare();
+
+        List<User> accountList = accountDao.query(preparedQuery);
+        
+        for(User i:accountList){
+            System.out.println("User #" + i.getUserID() + ": " + i.getFirstName() + " " + i.getLastName());
+        }
+        
+            conn.close();
+        
+      } catch (Exception e) {
+            System.out.println(e.getMessage());
+      }  finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
     
     public static void viewPayroll(){
         System.out.println("Sorry, this feature is not yet implemented.");

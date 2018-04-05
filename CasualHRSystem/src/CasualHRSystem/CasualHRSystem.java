@@ -6,6 +6,7 @@
 package CasualHRSystem;
 
 import CasualHRSystem.User.*;
+import CasualHRSystem.Course.*;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 import com.j256.ormlite.dao.*;
@@ -33,30 +34,6 @@ public class CasualHRSystem {
     
     static String VERSION_NUMBER = "0.1";
     
-    public void createUserTable(){
-        ConnectionSource conn= null;
-        try {
-            conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
-            System.out.println("Connection to SQLite has been established.");
-
-            
-            // instantiate the dao
-            Dao<User, String> accountDao = DaoManager.createDao(conn, User.class);
-            TableUtils.createTable(conn, User.class);
-            
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        } finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
-            }
-        }
-    }
-    
     /**
      * @param args the command line arguments
      */
@@ -67,6 +44,7 @@ public class CasualHRSystem {
     //}
     
     public static void main(String[] args) {
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR"); // Turn off the debug messages...
         File file = new File("chrsDB.db");
         boolean fileCreated= false;
         if(!file.exists()){
@@ -79,7 +57,7 @@ public class CasualHRSystem {
         
         DatabaseDriver.initDB();
         
-        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
+       
         ConnectionSource conn= null;
         
         System.out.println("--Welcome to Casual HR System (v. " + VERSION_NUMBER + ") --");
@@ -92,8 +70,21 @@ public class CasualHRSystem {
             currentUser = DatabaseDriver.login();
             if(currentUser!=null){
                 currentUser.welcomeMessage();
-                
-                System.out.println("(1) Add User/Staff");
+                Scanner scanner = new Scanner(System.in);
+                System.out.println("Please select an option below:");
+                System.out.println("  (1) Add User/Staff");
+                System.out.println("  (2) View Staff");
+                System.out.println("  (3) Create Course");
+                int optionChosen = scanner.nextInt();
+                if(optionChosen==1){
+                    DatabaseDriver.addStaff();
+                } else if(optionChosen==2){
+                    DatabaseDriver.viewStaff();
+                } else if(optionChosen==3){
+                    CourseDriver.createCourse();
+                } else {
+                    System.out.println("Invalid selection, please try again.");
+                }
                 
             } else {
                 System.out.println("Incorrect Credentials.");
