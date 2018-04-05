@@ -31,12 +31,21 @@ public class DatabaseDriver {
             conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
             File db = new File("chrsDB.db");
             TableUtils.createTable(conn, User.class);
+            
+            /*
             TableUtils.createTable(conn, Course.class);
             TableUtils.createTable(conn, Task.class);
             TableUtils.createTable(conn, Activity.class);
             TableUtils.createTable(conn, CourseApplication.class);
             TableUtils.createTable(conn, VariationRequest.class);
-            TableUtils.createTable(conn, StaffProposal.class);
+            TableUtils.createTable(conn, StaffProposal.class
+            */
+            
+            Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
+
+            User newUser = new User(0, "Admin", "Admin", "admin@example.com", "admin", "admin");
+            accountDao.create(newUser);
+            
             conn.close();
             
                } catch (Exception e) {

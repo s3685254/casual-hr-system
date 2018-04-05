@@ -12,6 +12,7 @@ import java.util.ArrayList;
  * @author jye
  */
 public class Course {
+    
     int courseID;
     String courseName;
 }

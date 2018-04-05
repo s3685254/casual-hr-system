@@ -5,11 +5,14 @@
  */
 package CasualHRSystem.Request;
 
+import com.j256.ormlite.field.DatabaseField;
+
 /**
  *
  * @author jye
  */
 public class Request {
+   @DatabaseField(id = true)
    int requestID;
    int userID;
    String type;

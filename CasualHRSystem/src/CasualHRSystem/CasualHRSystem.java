@@ -13,7 +13,10 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.stmt.PreparedQuery;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
+import com.j256.ormlite.logger.LocalLog;
 import java.io.Reader;
+import java.io.File;
+import java.io.IOException;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -29,7 +32,6 @@ import java.util.Scanner;
 public class CasualHRSystem {
     
     static String VERSION_NUMBER = "0.1";
-    
     
     public void createUserTable(){
         ConnectionSource conn= null;
@@ -65,6 +67,19 @@ public class CasualHRSystem {
     //}
     
     public static void main(String[] args) {
+        File file = new File("chrsDB.db");
+        boolean fileCreated= false;
+        if(!file.exists()){
+            try{
+          fileCreated = file.createNewFile();
+            } catch( IOException e) {
+                System.out.println("Could not create database, aborting!");
+            }
+        };
+        
+        DatabaseDriver.initDB();
+        
+        System.setProperty(LocalLog.LOCAL_LOG_LEVEL_PROPERTY, "ERROR");
         ConnectionSource conn= null;
         
         System.out.println("--Welcome to Casual HR System (v. " + VERSION_NUMBER + ") --");
