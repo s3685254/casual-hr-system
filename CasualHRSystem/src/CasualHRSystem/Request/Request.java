@@ -97,4 +97,11 @@ public class Request {
         this.dateSubmitted = new Date().toString();
     }
    
+   public String getResponseMessage(){
+       return responseMessage;
+   }
+   
+   public void setResponseMessage(String responseMessage){
+       this.responseMessage = responseMessage;
+   }
 }

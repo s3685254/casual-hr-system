@@ -11,4 +11,12 @@ package CasualHRSystem.Request;
  */
 public class VariationRequest extends Request{
    int activityID;
+   
+   public int getAvtivityID(){
+        return activityID;
+    }
+    
+    public void setAvtivityID(int activityID){
+        this.activityID = activityID;
+    }
 }

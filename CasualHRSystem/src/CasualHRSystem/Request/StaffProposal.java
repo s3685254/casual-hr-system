@@ -14,4 +14,36 @@ public class StaffProposal extends Request {
     int staffName;
     int staffIDs;
     int staffActivitiesID;
+    
+    public String getCourse(){
+        return course;
+    }
+    
+    public void setCourse(String course){
+        this.course = course;
+    }
+    
+    public int getStaffName(){
+        return staffName;
+    }
+    
+    public void setStaffName(int staffName){
+        this.staffName = staffName;
+    }
+    
+    public int getStaffIDs(){
+        return staffIDs;
+    }
+    
+    public void setStaffIDs(int staffIDs){
+        this.staffIDs = staffIDs;
+    }
+    
+    public int getStaffAvtivitiesID(){
+        return staffActivitiesID;
+    }
+    
+    public void setStaffActivitiesID(int staffActivitiesID){
+        this.staffActivitiesID = staffActivitiesID;
+    }
 }
