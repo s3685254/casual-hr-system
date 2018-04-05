@@ -95,11 +95,11 @@ public class RequestDriver {
     }
     
     public static void viewRequest(){
-        System.out.println("Sorry, this feature is not yet implemented.");
+        
     }
     
     public static void notifyApplicant(){
-        System.out.println("Sorry, this feature is not yet implemented.");
+        
     }
     
 }
