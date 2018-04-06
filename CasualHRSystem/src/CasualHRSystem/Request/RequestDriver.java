@@ -20,6 +20,7 @@ import java.util.Scanner;
  */
 public class RequestDriver {
     
+<<<<<<< HEAD
     public static void showMenu(){
         System.out.println("    (1) Create Request");
         System.out.println("    (1) View Request");
@@ -99,6 +100,17 @@ public class RequestDriver {
     }
     
     public static void notifyApplicant(){
+=======
+    void createRequest(){
+        
+    }
+    
+    void viewRequests(){
+        
+    }
+    
+    void generateReport(){
+>>>>>>> master
         
     }
     

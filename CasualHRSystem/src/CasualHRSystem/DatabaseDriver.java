@@ -6,20 +6,60 @@
 package CasualHRSystem;
 
 import CasualHRSystem.User.User;
+import com.j256.ormlite.table.TableUtils;
 import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.dao.DaoManager;
 import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
+import java.io.File;
 import java.util.List;
 import java.util.Scanner;
+import CasualHRSystem.Course.*;
+import CasualHRSystem.Request.*;
 
 /**
  *
  * @author jye
  */
 public class DatabaseDriver {
+    
+    public static void initDB(){
+        ConnectionSource conn = null;
+        try{
+            conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
+            File db = new File("chrsDB.db");
+            TableUtils.createTable(conn, User.class);
+            TableUtils.createTable(conn, Course.class);
+            /*
+            TableUtils.createTable(conn, Task.class);
+            TableUtils.createTable(conn, Activity.class);
+            TableUtils.createTable(conn, CourseApplication.class);
+            TableUtils.createTable(conn, VariationRequest.class);
+            TableUtils.createTable(conn, StaffProposal.class
+            */
+            
+            Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
+
+            User newUser = new User(0, "Admin", "Admin", "admin@example.com", "admin", "admin");
+            accountDao.create(newUser);
+            
+            conn.close();
+            
+               } catch (Exception e) {
+            System.out.println(e.getMessage());
+      }  finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    
+    }
     
     public static User login(){
         
@@ -131,6 +171,39 @@ public class DatabaseDriver {
         }
     }
         
+    
+    public static void viewStaff(){
+            ConnectionSource conn = null;
+        Scanner scanner = new Scanner(System.in);
+                try{
+
+         conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
+         
+        Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
+        QueryBuilder<User, Integer> userQuery = accountDao.queryBuilder();
+        userQuery.orderBy("userID", false).prepare();
+        PreparedQuery<User> preparedQuery = userQuery.prepare();
+
+        List<User> accountList = accountDao.query(preparedQuery);
+        
+        for(User i:accountList){
+            System.out.println("User #" + i.getUserID() + ": " + i.getFirstName() + " " + i.getLastName());
+        }
+        
+            conn.close();
+        
+      } catch (Exception e) {
+            System.out.println(e.getMessage());
+      }  finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+        }
+    }
     
     public static void viewPayroll(){
         System.out.println("Sorry, this feature is not yet implemented.");
