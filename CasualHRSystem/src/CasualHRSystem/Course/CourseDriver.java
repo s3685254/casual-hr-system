@@ -44,7 +44,7 @@ public class CourseDriver {
                 courseDao.create(newCourse);
   
         } else {
-            Course newCourse = new Course(courseList.get(0).courseID+1, courseName);
+            Course newCourse = new Course(courseList.get(0).getCourseID()+1, courseName);
                 courseDao.create(newCourse);
         }
         
