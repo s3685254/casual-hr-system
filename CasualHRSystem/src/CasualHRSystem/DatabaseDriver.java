@@ -54,8 +54,8 @@ public class DatabaseDriver {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     
@@ -71,7 +71,6 @@ public class DatabaseDriver {
             System.out.println("Login");
             System.out.print("Email: ");
             String emailToCheck = scanner.next();
-            System.out.println();
             System.out.print("Password: ");
             String passwordToCheck = scanner.next();
             Dao<User, String> accountDao = DaoManager.createDao(conn, User.class);
@@ -165,16 +164,14 @@ public class DatabaseDriver {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
-        
-    
+
     public static void viewStaff(){
-            ConnectionSource conn = null;
-        Scanner scanner = new Scanner(System.in);
+        ConnectionSource conn = null;
                 try{
 
          conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
@@ -187,7 +184,7 @@ public class DatabaseDriver {
         List<User> accountList = accountDao.query(preparedQuery);
         
         for(User i:accountList){
-            System.out.println("User #" + i.getUserID() + ": " + i.getFirstName() + " " + i.getLastName());
+            System.out.println("User #" + i.getUserID() + ": " + i.getFirstName() + " " + i.getLastName() + " | " + i.getUserType());
         }
         
             conn.close();
@@ -199,8 +196,40 @@ public class DatabaseDriver {
                 if (conn != null) {
                     conn.close();
                 }
-            } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+    }
+    
+    public static void viewCourses(){
+        ConnectionSource conn = null;
+                try{
+
+         conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
+         
+        Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
+        QueryBuilder<Course, Integer> courseQuery = courseDao.queryBuilder();
+        courseQuery.orderBy("courseID", false).prepare();
+        PreparedQuery<Course> preparedQuery = courseQuery.prepare();
+
+        List<Course> courseList = courseDao.query(preparedQuery);
+        
+        for(Course i:courseList){
+            System.out.println("Course ID " + i.getCourseID() + ": " + i.getCourseName());
+        }
+        
+            conn.close();
+        
+      } catch (Exception e) {
+            System.out.println(e.getMessage());
+      }  finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         }
     }
