@@ -5,11 +5,14 @@
         <group>
             <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/User/User.java</file>
             <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/User/CourseCoordinator.java</file>
+            <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/Course/Course.java</file>
             <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/CasualHRSystem.java</file>
+            <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/Request/Request.java</file>
             <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/User/Admin.java</file>
-            <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/Payslip.java</file>
+            <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/Course/Task.java</file>
+            <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/Course/Activity.java</file>
             <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/DatabaseDriver.java</file>
-            <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/User/CasualStaffMember.java</file>
+            <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/Request/StaffProposal.java</file>
             <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/User/Approvals.java</file>
             <file>file:/home/jye/Documents/casual-hr-system/CasualHRSystem/src/CasualHRSystem/Request/RequestDriver.java</file>
         </group>
