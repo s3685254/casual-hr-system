@@ -5,11 +5,11 @@
  */
 package CasualHRSystem.Request;
 
-<<<<<<< HEAD
+//<<<<<<< HEAD
 import java.util.Date;
-=======
+//=======
 import com.j256.ormlite.field.DatabaseField;
->>>>>>> master
+//>>>>>>> master
 
 /**
  *
@@ -95,7 +95,7 @@ public class Request {
    }
    
    public void setDateSubmitted(String dateSubmitted){
-       this.dateSubmitted = date;
+       //this.dateSubmitted = date;
    }
    
    public void setDateSubmitted() {
