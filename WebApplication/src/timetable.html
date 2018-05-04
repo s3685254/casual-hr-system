@@ -1,0 +1,97 @@
+{% extends 'src/base.html' %}
+
+{% block content %}
+<script>
+function timetableSwitch(){
+  document.getElementById('showTimetable').style.display='none';
+  document.getElementById('showTable').style.display='block';
+}
+function tableSwitch(){
+  document.getElementById('showTable').style.display='none';
+  document.getElementById('showTimetable').style.display='block';
+}
+</script>
+
+<a id = "showTimetable" href="#timetable" onclick="timetableSwitch()"> Switch to timetable view</a>
+<a id = "showTable" href="#table" onclick="tableSwitch()"> Switch to table view</a>
+
+<!-- Add New Element Modal-->
+<div class="modal fade" id="newElementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-inverse">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Add New {{element_type}}</h5>
+        <button type="button" class="close" style="color:#fff" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        {% for field in fielded %}
+			{% if field[1] %}
+				<div class="form-group row">
+				  <label for="example-text-input" class="col-2 col-form-label">{{field[0]}}</label>
+				  <div class="col-10">
+					<input class="form-control" type="text" value="" id="add-new-{{field[0]}}">
+				  </div>
+				</div>
+			{% endif %}
+        {% endfor %}
+
+
+
+        </form>
+      </div>
+      <div class="modal-footer" style="color:">
+        <button href="#" type="submit" id="submit_add_new" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tableToolbar">
+  <span id="tableControls" style="float:right;">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newElementModal">          <span class="fa fa-plus"></span> Add new</button>
+  <span id="selectionOptions" style="display: none;">
+<button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#editMultipleModal"><span class="fa fa-edit"></span> Edit Selected</button>
+  <button type="button" class="btn btn-danger"><span class="fa fa-trash"></span> Delete Selected</button>
+  </span>
+  <button type="button" class="btn btn-danger"><span class="fa fa-trash"></span> Delete all</button>
+
+  </span>
+
+</div>
+
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">First</th>
+        <th scope="col">Last</th>
+        <th scope="col">Handle</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <th scope="table" class="table-light">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>@mdo</td>
+      </tr>
+      <tr>
+        <th scope="row" class="table-light">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>@fat</td>
+      </tr>
+      <tr>
+        <th scope="row" class="table-light">3</th>
+        <td>Larry</td>
+        <td>the Bird</td>
+        <td>@twitter</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}
