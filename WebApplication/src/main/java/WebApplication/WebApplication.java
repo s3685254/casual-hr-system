@@ -86,16 +86,11 @@ public class WebApplication {
                         
                         String courseID = request.params("course");
                         
-                        
-                        
-                        /*
+
                         LocalDate startOfWeek = LocalDate.now().with( TemporalAdjusters.previous( DayOfWeek.MONDAY ) );
-                        //LocalDate endOfWeek = LocalDate.now().with( TemporalAdjusters.previous( DayOfWeek.SUNDAY ) );
+                        LocalDate endOfWeek = LocalDate.now().with( TemporalAdjusters.previous( DayOfWeek.SUNDAY ) );
                         LocalDate[7] weekDays = new ArrayList();
-                        ttttttttttttttttttttttttttttttttttttttttttttttttttttttttttt
-                        = startOfWeek.range(startOfWeek.plusDays(7));
-                        */
-                        
+
                         CasualHRSystem.Course.Course course = CasualHRSystem.DatabaseDriver.getCourse(Integer.valueOf(courseID));
                         
                         System.out.println(course);
