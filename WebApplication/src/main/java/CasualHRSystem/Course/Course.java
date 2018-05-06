@@ -20,24 +20,32 @@ import java.util.ArrayList;
  * @author jye
  */
 public class Course {
-    @DatabaseField(id = true)
+    public static final String ID_FIELD_NAME = "courseID";
+    public static final String CODE_FIELD_NAME = "courseCode";
+    public static final String NAME_FIELD_NAME = "courseName";
+    public static final String COORDINATOR_FIELD_NAME = "courseCoordinator";
+    public static final String START_DATE_FIELD_NAME = "courseStartDate";
+    public static final String END_DATE_FIELD_NAME = "courseEndDate";
+    @DatabaseField(generatedId=true, columnName = ID_FIELD_NAME)
     private int courseID;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = false, columnName = CODE_FIELD_NAME)
+    private String courseCode;
+    @DatabaseField(canBeNull = false, columnName = NAME_FIELD_NAME)
     private String courseName;
-    @DatabaseField(canBeNull = true)
+    @DatabaseField(canBeNull = true, columnName = COORDINATOR_FIELD_NAME)
     private String courseCoordinator;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = false, columnName = START_DATE_FIELD_NAME)
     private String courseStartDate;
-    @DatabaseField(canBeNull = false)
+    @DatabaseField(canBeNull = false, columnName = END_DATE_FIELD_NAME)
     private String courseEndDate;
     
     public Course(){
         
     };
     
-    public Course(int id, String name, String courseCoordinator, String courseStartDate, String courseEndDate){
-        this.courseID = id;
+    public Course(String name, String courseCode, String courseCoordinator, String courseStartDate, String courseEndDate){
         this.courseName = name;
+        this.courseCode = courseCode;
         this.courseCoordinator = courseCoordinator;
         this.courseStartDate = courseStartDate;
         this.courseEndDate = courseEndDate;
@@ -48,6 +56,17 @@ public class Course {
         try{
             Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
             courseDao.create(this);
+        } catch (SQLException e){
+            System.out.println(e.getCause());
+        }
+        DatabaseDriver.disconnectFromDB(conn);
+    }
+    
+    public void updateInDB(){
+        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        try{
+            Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
+            courseDao.update(this);
         } catch (SQLException e){
             System.out.println(e.getCause());
         }
@@ -108,5 +127,33 @@ public class Course {
      */
     public void setCourseEndDate(String courseEndDate) {
         this.courseEndDate = courseEndDate;
+    }
+
+    /**
+     * @return the courseCode
+     */
+    public String getCourseCode() {
+        return courseCode;
+    }
+
+    /**
+     * @param courseCode the courseCode to set
+     */
+    public void setCourseCode(String courseCode) {
+        this.courseCode = courseCode;
+    }
+
+    /**
+     * @return the courseCoordinator
+     */
+    public String getCourseCoordinator() {
+        return courseCoordinator;
+    }
+
+    /**
+     * @param courseCoordinator the courseCoordinator to set
+     */
+    public void setCourseCoordinator(String courseCoordinator) {
+        this.courseCoordinator = courseCoordinator;
     }
 }

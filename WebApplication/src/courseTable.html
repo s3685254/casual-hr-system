@@ -1,32 +1,43 @@
 {% extends 'src/base.html' %}
 {% block content %}
 
-<table id="data" class="table table-dark table-hover">
-  <thead>
-    <tr>
-      <th scope="col" width="80px;">Select</th>
-      {% for field in fields %}
-      <th scope="col">{{field}}</th>
-      {% endfor %} {% for action in enabled_actions %}
-      <th scope="col" style="width:40px;"></th>
-      {% endfor %}
+<style>
+	.optionbtn{
+    display:inline-block;
+		padding-left:10px;
+	}
+</style>
 
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in items %}
-    <tr id="{{item[0]}}">
-      <td><input type="checkbox" id="select{{item[0]}}" onchange='highlight({{item[0]}});' autocomplete="off"></td>
-      {% for attribute in item %}
-      <td>{{attribute}}</td>
-      {% endfor %} {% for action in enabled_actions %}
-      <img href={{enabled_actions[ 'icon']}}>
-      <span class="glyphicon glyphicon-remove"></span> {% endfor %}
-      <th scope="col" style="width:40px;"><span class="fa fa-edit" data-toggle="modal" data-target="#editModal_{{item[0]}}"></span></th>
-      <th scope="col" style="width:40px;"><span class="fa fa-trash"></span></th>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <h2> Courses </h2>
+      <tr>
+        <th scope="col">Course ID</th>
+        <th scope="col">Course Code</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Course Coordinator</th>
+        <th scope="col">Start Date</th>
+        <th scope="col">End date</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in courses %}
+      <tr>
+        <td>{{i.courseID}}</td>
+        <td>{{i.courseCode}}</td>
+        <td>{{i.courseName}}</td>
+        <td>{{i.courseCoordinator}}</td>
+        <td>{{i.courseStartDate}}</td>
+        <td>{{i.courseEndDate}}</td>
+        <td><a href="course/{{i.courseID}}" class="btn btn-primary optionbtn" role="button">View</button>
+        <a href="edit_course/{{i.courseID}}" class="btn btn-warning optionbtn" role="button"><span class="fa fa-edit"></span>Edit</button>
+        <a href="delete_course/{{i.courseID}}" class="btn btn-danger optionbtn" role="button"><span class="fa fa-trash"></span>Delete</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
 
 {% endblock %}

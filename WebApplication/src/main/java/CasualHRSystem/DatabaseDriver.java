@@ -14,10 +14,13 @@ import com.j256.ormlite.jdbc.JdbcConnectionSource;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.PreparedQuery;
+import com.j256.ormlite.stmt.Where;
 import java.io.File;
 import java.util.List;
 import java.util.Scanner;
 import CasualHRSystem.Request.*;
+import java.sql.SQLException;
+
 
 /**
  *
@@ -230,7 +233,7 @@ public class DatabaseDriver {
         
     }
     
-    public static Course getCourse(int courseID){
+    /*public static Course getCourse(int courseID){
         ConnectionSource conn = null;
         try{
 
@@ -271,40 +274,39 @@ public class DatabaseDriver {
         return null;
     
     }
+    */
     
-    public static void viewCourses(){
-        ConnectionSource conn = null;
-                try{
-
-         conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
-         
-        Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
-        QueryBuilder<Course, Integer> courseQuery = courseDao.queryBuilder();
-        courseQuery.orderBy("courseID", false).prepare();
-        PreparedQuery<Course> preparedQuery = courseQuery.prepare();
-        
-
-        List<Course> courseList = courseDao.query(preparedQuery);
-        
-        
-        
-        for(Course i:courseList){
-            System.out.println("Course ID " + i.getCourseID() + ": " + i.getCourseName());
+    public static Course getCourse(int courseID){
+        ConnectionSource conn = connectToDB("chrsDB.db");
+        try{
+            Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
+            QueryBuilder<Course, Integer> courseQuery = courseDao.queryBuilder();
+            Where where = courseQuery.where();
+            where.eq(Course.ID_FIELD_NAME, courseID);
+            PreparedQuery<Course> preparedQuery = courseQuery.prepare();
+            disconnectFromDB(conn);
+            return courseDao.query(preparedQuery).get(0);
+        } catch (SQLException e){
+            System.out.println(e);
         }
-        
-            conn.close();
-        
-      } catch (Exception e) {
-            System.out.println(e.getMessage());
-      }  finally {
-            try {
-                if (conn != null) {
-                    conn.close();
-                }
-            } catch (Exception e) {
-                System.out.println(e.getMessage());
-            }
+        return null;
+    }
+    
+    
+    public static List<Course> getCourses(){
+         ConnectionSource conn = connectToDB("chrsDB.db");
+        try{
+            Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
+            QueryBuilder<Course, Integer> courseQuery = courseDao.queryBuilder();
+            courseQuery.orderBy("courseID", false).prepare();
+            PreparedQuery<Course> preparedQuery = courseQuery.prepare();
+            disconnectFromDB(conn);
+            List<Course> courseList = courseDao.query(preparedQuery);
+            return courseList;
+        } catch (SQLException e){
+            System.out.println(e);
         }
+        return null;
     }
     
     public static void viewPayroll(){

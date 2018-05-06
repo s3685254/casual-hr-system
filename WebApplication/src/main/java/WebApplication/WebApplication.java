@@ -1,5 +1,6 @@
 package WebApplication;
 
+import CasualHRSystem.Course.Course;
 import CasualHRSystem.DatabaseDriver;
 import spark.ModelAndView;
 import spark.template.pebble.PebbleTemplateEngine;
@@ -10,8 +11,10 @@ import spark.Spark;
 
 import static spark.Spark.get;
 import static spark.Spark.post;
+import static spark.Spark.redirect;
 
 import com.google.gson.*;
+import java.net.URL;
 import java.util.StringTokenizer;
 
 import org.slf4j.Logger;
@@ -20,6 +23,8 @@ import org.slf4j.LoggerFactory;
 import java.time.*;
 import java.time.temporal.*;
 import java.util.ArrayList;
+import java.util.List;
+import org.sqlite.core.DB;
 
 public class WebApplication {
 
@@ -70,7 +75,7 @@ public class WebApplication {
             DatabaseDriver.initDB("chrsDB.db");
             Spark.staticFiles.location("/static");
             Logger logger = LoggerFactory.getLogger(WebApplication.class);
-	
+           
             get("/login", (request, response) -> {
                     
 
@@ -119,23 +124,60 @@ public class WebApplication {
                 post("/add_course", (request, response) -> {
                     	Map<String, Object> attributes = new HashMap<>();
                         String name=request.queryParams("name");
+                        String courseCode=request.queryParams("course-code");
                         String courseCoordinator=request.queryParams("course-coordinator");
                         String startDate = request.queryParams("start-date");
                         String endDate = request.queryParams("end-date");
-                        System.out.println(startDate);
                         response.redirect("courses");
-                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(1, name, courseCoordinator, startDate, endDate);
+                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(name, courseCode, courseCoordinator, startDate, endDate);
                         addedCourse.addToDB();
 			return new ModelAndView(attributes, "src/add_course.html");
+		}, new PebbleTemplateEngine());
+                
+                get("/edit_course/:courseID", (request, response) -> {
+                    	Map<String, Object> attributes = new HashMap<>();
+                        Course course = DatabaseDriver.getCourse(Integer.valueOf(request.params(":courseID")));
+                        attributes.put("courseName",course.getCourseName());
+                        attributes.put("courseCode",course.getCourseCode());
+                        attributes.put("courseCoordinator",course.getCourseCoordinator());
+                        attributes.put("courseStartDate",course.getCourseStartDate());
+                        attributes.put("courseEndDate",course.getCourseEndDate());
+			return new ModelAndView(attributes, "src/edit_course.html");
+		}, new PebbleTemplateEngine());
+                
+                post("/edit_course/:courseID", (request, response) -> {
+                    	Map<String, Object> attributes = new HashMap<>();
+                        Course course = DatabaseDriver.getCourse(Integer.valueOf(request.params(":courseID")));
+                        String name=request.queryParams("name");
+                        String courseCode=request.queryParams("course-code");
+                        String courseCoordinator=request.queryParams("course-coordinator");
+                        String startDate = request.queryParams("start-date");
+                        String endDate = request.queryParams("end-date");
+                        course.setCourseName(name);
+                        course.setCourseCode(courseCode);
+                        course.setCourseCoordinator(courseCoordinator);
+                        course.setCourseStartDate(startDate);
+                        course.setCourseEndDate(endDate);
+                        course.updateInDB();
+                        
+
+                        
+                        response.redirect("/courses");
+                        Spark.halt();
+			return new ModelAndView(attributes, "src/edit_course.html");
                 }, new PebbleTemplateEngine());
                 
                 get("/courses", (request, response) -> {
                     	Map<String, Object> attributes = new HashMap<>();
-                        attributes.put("User", request.session().attribute("user"));
-			return new ModelAndView(attributes, "src/dashboard.html");
+                        
+                        List<Course> courses;
+                        courses= DatabaseDriver.getCourses();
+                        attributes.put("courses", courses);
+                        
+			return new ModelAndView(attributes, "src/courseTable.html");
                 }, new PebbleTemplateEngine());
                 
-                get("/timetable/:course", (request, response) -> {
+                get("course/:courseID", (request, response) -> {
                         LocalTime EARLIEST_BLOCK=LocalTime.of(0, 0);
                         LocalTime LATEST_BLOCK=LocalTime.of(23, 30);
                         System.out.println(EARLIEST_BLOCK.toString());
