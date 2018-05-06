@@ -1,6 +1,14 @@
 {% extends 'src/base.html' %}
 
 {% block content %}
+
+<style>
+td a {
+    display:block;
+    width:100%;
+}
+</style>
+
 <script>
 function timetableSwitch(){
   document.getElementById('showTimetable').style.display='none';
@@ -15,7 +23,61 @@ function tableSwitch(){
 <a id = "showTimetable" href="#timetable" onclick="timetableSwitch()"> Switch to timetable view</a>
 <a id = "showTable" href="#table" onclick="tableSwitch()"> Switch to table view</a>
 
-<!-- Add New Element Modal-->
+
+
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Time Block</th>
+        {% for i in dates %}
+                <th scope="col">{{i}}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in times %}
+      <tr>
+        <th scope="table" class="table-light">{{i}}</th>
+        {% for i in dates %}
+          <td>X</td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<table id="data" class="table table-dark table-hover">
+  <thead>
+    <tr>
+      <th scope="col" width="80px;">Select</th>
+      {% for field in fields %}
+      <th scope="col">{{field}}</th>
+      {% endfor %} {% for action in enabled_actions %}
+      <th scope="col" style="width:40px;"></th>
+      {% endfor %}
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr id="{{item[0]}}">
+      <td><input type="checkbox" id="select{{item[0]}}" onchange='highlight({{item[0]}});' autocomplete="off"></td>
+      {% for attribute in item %}
+      <td>{{attribute}}</td>
+      {% endfor %} {% for action in enabled_actions %}
+      <img href={{enabled_actions[ 'icon']}}>
+      <span class="glyphicon glyphicon-remove"></span> {% endfor %}
+      <th scope="col" style="width:40px;"><span class="fa fa-edit" data-toggle="modal" data-target="#editModal_{{item[0]}}"></span></th>
+      <th scope="col" style="width:40px;"><span class="fa fa-trash"></span></th>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<!--
+
 <div class="modal fade" id="newElementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -61,37 +123,7 @@ function tableSwitch(){
 
 </div>
 
-<div class="table-responsive">
-  <table class="table table-bordered">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <th scope="table" class="table-light">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row" class="table-light">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      <tr>
-        <th scope="row" class="table-light">3</th>
-        <td>Larry</td>
-        <td>the Bird</td>
-        <td>@twitter</td>
-      </tr>
-    </tbody>
-  </table>
-</div>
+
+-->
 
 {% endblock %}

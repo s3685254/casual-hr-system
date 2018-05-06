@@ -5,6 +5,7 @@
  */
 package CasualHRSystem;
 
+import CasualHRSystem.Course.Course;
 import CasualHRSystem.User.User;
 import com.j256.ormlite.table.TableUtils;
 import com.j256.ormlite.dao.Dao;
@@ -16,7 +17,6 @@ import com.j256.ormlite.stmt.PreparedQuery;
 import java.io.File;
 import java.util.List;
 import java.util.Scanner;
-import CasualHRSystem.Course.*;
 import CasualHRSystem.Request.*;
 
 /**
@@ -25,11 +25,11 @@ import CasualHRSystem.Request.*;
  */
 public class DatabaseDriver {
     
-    public static void initDB(){
+    public static void initDB(String dbLoc){
         ConnectionSource conn = null;
         try{
-            conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
-            File db = new File("chrsDB.db");
+            conn = new JdbcConnectionSource("jdbc:sqlite:"+dbLoc);
+            File db = new File(dbLoc);
             TableUtils.createTable(conn, User.class);
             TableUtils.createTable(conn, Course.class);
             /*
@@ -61,13 +61,34 @@ public class DatabaseDriver {
     
     }
     
+    public static ConnectionSource connectToDB(String db){
+        ConnectionSource conn = null;
+        try {
+            conn = new JdbcConnectionSource("jdbc:sqlite:"+db);
+            return conn;
+
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        } finally {
+            try {
+                if (conn != null) {
+                    conn.close();
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+        return null;
+    }
+
+    
+    
     public static User login(String emailToCheck, String passwordToCheck){
         
     ConnectionSource conn = null;
         try{
             
             conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
-            Scanner scanner = new Scanner(System.in);
             Dao<User, String> accountDao = DaoManager.createDao(conn, User.class);
         QueryBuilder<User, String> userQuery = accountDao.queryBuilder();
       // the 'password' field must be equal to "qwerty"
@@ -198,6 +219,7 @@ public class DatabaseDriver {
     }
     
     public static void addCourse(){
+        ConnectionSource conn=connectToDB("chrsDB.db");
         
     }
     

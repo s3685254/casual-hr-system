@@ -18,14 +18,43 @@ import org.slf4j.LoggerFactory;
 
 import java.time.*;
 import java.time.temporal.*;
+import java.util.ArrayList;
 
-
-
-/**
- * @author Nikki
- */
 public class WebApplication {
 
+        public static ArrayList<String> datesInRange(LocalDate startDate, LocalDate endDate){
+            ArrayList<LocalDate> datesShown = new ArrayList();
+            LocalDate temp = startDate;
+            while(!temp.isAfter(endDate)){
+                datesShown.add(temp);
+                temp = temp.plusDays(1);
+            }
+            ArrayList<String> dates = new ArrayList();
+            for(LocalDate i:datesShown){
+                        dates.add(i.toString());
+            }
+            return dates;
+        }
+        
+        public static ArrayList<String> timesInRange(LocalTime startTime, LocalTime endTime, int minutesInterval){
+            ArrayList<LocalTime> timesShown = new ArrayList();
+            LocalTime temp = startTime;
+            while (!temp.isAfter(endTime)){
+                timesShown.add(temp);
+                if(!temp.plusMinutes(minutesInterval).isBefore(temp)){
+                    temp=temp.plusMinutes(minutesInterval);
+                } else {
+                    break;
+                }
+                System.out.println(temp.toString());
+            }
+            ArrayList<String> times = new ArrayList();
+            for(LocalTime i:timesShown){
+                times.add(i.toString());
+            }
+            return times;
+        }
+    
         public static HashMap<String,String> getParams(String request){
             HashMap hashMap = new HashMap<String,String>();
             StringTokenizer strtok = new StringTokenizer(request, "&");
@@ -79,21 +108,48 @@ public class WebApplication {
 			return new ModelAndView(attributes, "src/dashboard.html");
                 }, new PebbleTemplateEngine());
                 
+                get("/add_course", (request, response) -> {
+                    	Map<String, Object> attributes = new HashMap<>();
+                        
+			return new ModelAndView(attributes, "src/add_course.html");
+                }, new PebbleTemplateEngine());
                 
+                post("/add_course", (request, response) -> {
+                    	Map<String, Object> attributes = new HashMap<>();
+                        String name=request.queryParams("name");
+                        String courseCoordinator=request.queryParams("course-coordinator");
+                        String startDate = request.queryParams("start-date");
+                        String endDate = request.queryParams("end-date");
+                        System.out.println(startDate);
+                        response.redirect("courses");
+                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(0, name, startDate, endDate);
+			return new ModelAndView(attributes, "src/add_course.html");
+                }, new PebbleTemplateEngine());
+                
+                get("/courses", (request, response) -> {
+                    	Map<String, Object> attributes = new HashMap<>();
+                        attributes.put("User", request.session().attribute("user"));
+			return new ModelAndView(attributes, "src/dashboard.html");
+                }, new PebbleTemplateEngine());
                 
                 get("/timetable/:course", (request, response) -> {
-			Map<String, Object> attributes = new HashMap<>();
+                        LocalTime EARLIEST_BLOCK=LocalTime.of(0, 0);
+                        LocalTime LATEST_BLOCK=LocalTime.of(23, 30);
+                        System.out.println(EARLIEST_BLOCK.toString());
+                        System.out.println(LATEST_BLOCK.toString());
                         
-                        String courseID = request.params("course");
-                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        //String courseID = request.params("course");
+                        //CasualHRSystem.Course.Course course = CasualHRSystem.DatabaseDriver.getCourse(Integer.valueOf(courseID));
 
                         LocalDate startOfWeek = LocalDate.now().with( TemporalAdjusters.previous( DayOfWeek.MONDAY ) );
-                        LocalDate endOfWeek = LocalDate.now().with( TemporalAdjusters.previous( DayOfWeek.SUNDAY ) );
-                        LocalDate[7] weekDays = new ArrayList();
-
-                        CasualHRSystem.Course.Course course = CasualHRSystem.DatabaseDriver.getCourse(Integer.valueOf(courseID));
+                        LocalDate endOfWeek = LocalDate.now().with( TemporalAdjusters.next(DayOfWeek.SUNDAY ) );
                         
-                        System.out.println(course);
+                        ArrayList<String> datesShown = datesInRange(startOfWeek, endOfWeek);
+                        ArrayList<String> timesShown = timesInRange(EARLIEST_BLOCK, LATEST_BLOCK, 30);
+                        
+                        attributes.put("times", timesShown);
+                        attributes.put("dates", datesShown);
 
 			// The hello.pebble file is located in directory:
 			// src/test/resources/spark/template/pebble

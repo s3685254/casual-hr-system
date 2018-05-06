@@ -6,7 +6,6 @@
 package CasualHRSystem;
 
 import CasualHRSystem.User.*;
-import CasualHRSystem.Course.*;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.table.TableUtils;
 import com.j256.ormlite.dao.*;

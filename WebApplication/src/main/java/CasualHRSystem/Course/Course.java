@@ -24,7 +24,7 @@ public class Course {
         
     };
     
-    public Course(int id, String name){
+    public Course(int id, String name, String courseStartDate, String courseEndDate){
         this.courseID = id;
         this.courseName = name;
     }

@@ -1,0 +1,32 @@
+{% extends 'src/base.html' %}
+{% block content %}
+
+<table id="data" class="table table-dark table-hover">
+  <thead>
+    <tr>
+      <th scope="col" width="80px;">Select</th>
+      {% for field in fields %}
+      <th scope="col">{{field}}</th>
+      {% endfor %} {% for action in enabled_actions %}
+      <th scope="col" style="width:40px;"></th>
+      {% endfor %}
+
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in items %}
+    <tr id="{{item[0]}}">
+      <td><input type="checkbox" id="select{{item[0]}}" onchange='highlight({{item[0]}});' autocomplete="off"></td>
+      {% for attribute in item %}
+      <td>{{attribute}}</td>
+      {% endfor %} {% for action in enabled_actions %}
+      <img href={{enabled_actions[ 'icon']}}>
+      <span class="glyphicon glyphicon-remove"></span> {% endfor %}
+      <th scope="col" style="width:40px;"><span class="fa fa-edit" data-toggle="modal" data-target="#editModal_{{item[0]}}"></span></th>
+      <th scope="col" style="width:40px;"><span class="fa fa-trash"></span></th>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+{% endblock %}

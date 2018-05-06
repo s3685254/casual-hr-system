@@ -1,0 +1,27 @@
+{% extends 'src/base.html' %}
+{% block content %}
+
+<h2> Add a new Course </h2>
+<div style="width:500px;">
+  <form method="post">
+<div class="form-group row">
+  <label for="name" class="col-6 col-form-label">Course Name</label>
+  <input class="form-control" type="text" value="" id="name" name="name">
+</div>
+<div class="form-group row">
+  <label for="course-coordiantor" class="col-6 col-form-label">Course Coordinator</label>
+  <input class="form-control" type="text" value="" id="course-coordiantor" name="course-coordiantor">
+</div>
+<div class="form-group row">
+  <label for="start-date" class="col-6 col-form-label">Start Date</label>
+  <input class="form-control" type="date" id="start-date" name="start-date">
+</div>
+  <label for="end-date" class="col-6 col-form-label">End Date</label>
+  <input class="form-control" type="date" id="end-date" name="end-date">
+<div class="form-group row">
+  <input class="form-control" type="submit" value="Submit">
+</div>
+</form>
+</div>
+
+{% endblock %}
