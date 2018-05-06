@@ -1,5 +1,6 @@
 package WebApplication;
 
+import CasualHRSystem.DatabaseDriver;
 import spark.ModelAndView;
 import spark.template.pebble.PebbleTemplateEngine;
 
@@ -66,6 +67,7 @@ public class WebApplication {
         }
     
 	public static void main(String[] args) {
+            DatabaseDriver.initDB("chrsDB.db");
             Spark.staticFiles.location("/static");
             Logger logger = LoggerFactory.getLogger(WebApplication.class);
 	
@@ -122,7 +124,8 @@ public class WebApplication {
                         String endDate = request.queryParams("end-date");
                         System.out.println(startDate);
                         response.redirect("courses");
-                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(0, name, startDate, endDate);
+                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(1, name, courseCoordinator, startDate, endDate);
+                        addedCourse.addToDB();
 			return new ModelAndView(attributes, "src/add_course.html");
                 }, new PebbleTemplateEngine());
                 

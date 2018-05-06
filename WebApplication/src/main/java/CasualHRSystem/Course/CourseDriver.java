@@ -21,6 +21,7 @@ import java.util.Scanner;
  * @author jye
  */
 public class CourseDriver {
+    /*
     public static void createCourse(){
             ConnectionSource conn = null;
             try{
@@ -61,5 +62,6 @@ public class CourseDriver {
         }
     
     }
+*/
 }
 

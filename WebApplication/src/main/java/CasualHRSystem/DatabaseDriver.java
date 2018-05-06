@@ -81,6 +81,13 @@ public class DatabaseDriver {
         return null;
     }
 
+    public static void disconnectFromDB(ConnectionSource conn){
+        try{
+            conn.close();
+        } catch (Exception e){
+            System.out.println(e.getMessage());
+        }
+    }
     
     
     public static User login(String emailToCheck, String passwordToCheck){
