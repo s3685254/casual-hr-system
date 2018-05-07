@@ -8,6 +8,7 @@
 	}
 </style>
 
+<a href="/add_course" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Course</a>
 <div class="table-responsive">
   <table class="table table-bordered">
     <thead class="thead-light">
@@ -31,9 +32,9 @@
         <td>{{i.courseCoordinator}}</td>
         <td>{{i.courseStartDate}}</td>
         <td>{{i.courseEndDate}}</td>
-        <td><a href="course/{{i.courseID}}" class="btn btn-primary optionbtn" role="button">View</button>
-        <a href="edit_course/{{i.courseID}}" class="btn btn-warning optionbtn" role="button"><span class="fa fa-edit"></span>Edit</button>
-        <a href="delete_course/{{i.courseID}}" class="btn btn-danger optionbtn" role="button"><span class="fa fa-trash"></span>Delete</button></td>
+        <td><a href="course/{{i.courseID}}" class="btn btn-primary optionbtn" role="button">View</a>
+        <a href="edit_course/{{i.courseID}}" class="btn btn-warning optionbtn" role="button"><span class="fa fa-edit"></span>Edit</a>
+        <a href="delete_course/{{i.courseID}}" class="btn btn-danger optionbtn" role="button"><span class="fa fa-trash"></span>Delete</a></td>
       </tr>
       {% endfor %}
     </tbody>

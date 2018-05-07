@@ -1,0 +1,51 @@
+{% extends 'src/base.html' %}
+{% block content %}
+
+<style>
+	.optionbtn{
+    display:inline-block;
+		padding-left:10px;
+	}
+</style>
+
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <h2> Courses </h2>
+      <tr>
+        <th scope="col">Course ID</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Task ID</th>
+        <th scope="col">Task Name</th>
+        <th scope="col">Activity ID</th>
+        <th scope="col">Activity Name</th>
+        <th scope="col">Staff</th>
+        <th scope="col">Students</th>
+        <th scope="col">Location</th>
+				<th scope="col">Date</th>
+				<th scope="col">Time</th>
+				<th scope="col">Duration</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in activities %}
+      <tr>
+        <td>{{i.courseID}}</td>
+        <td>{{i.courseName}}</td>
+        <td>{{i.activityID}}</td>
+        <td>{{i.activityName}}</td>
+				{% for j in i.staff %}
+        <td>{{j}}</td>
+				{% endfor %}
+        <td>{{i.courseEndDate}}</td>
+        <td><a href="course/{{i.courseID}}" class="btn btn-primary optionbtn" role="button">View</button>
+        <a href="edit_course/{{i.courseID}}" class="btn btn-warning optionbtn" role="button"><span class="fa fa-edit"></span>Edit</button>
+        <a href="delete_course/{{i.courseID}}" class="btn btn-danger optionbtn" role="button"><span class="fa fa-trash"></span>Delete</button></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

@@ -77,7 +77,7 @@ public class WebApplication {
             Logger logger = LoggerFactory.getLogger(WebApplication.class);
            
             get("/login", (request, response) -> {
-                    
+
 
 
 
@@ -108,20 +108,35 @@ public class WebApplication {
 		}, new PebbleTemplateEngine());
                 
                 get("/dashboard", (request, response) -> {
-                    	Map<String, Object> attributes = new HashMap<>();
-                        attributes.put("User", request.session().attribute("user"));
-			// The hello.pebble file is located in directory:
-			// src/test/resources/spark/template/pebble
-			return new ModelAndView(attributes, "src/dashboard.html");
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");   
+                        Spark.halt();
+                    }
+                    Map<String, Object> attributes = new HashMap<>();
+                    attributes.put("User", request.session().attribute("user"));
+                    // The hello.pebble file is located in directory:
+                    // src/test/resources/spark/template/pebble
+                    return new ModelAndView(attributes, "src/dashboard.html");
                 }, new PebbleTemplateEngine());
                 
+                
+                // Course Views
                 get("/add_course", (request, response) -> {
-                    	Map<String, Object> attributes = new HashMap<>();
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    Map<String, Object> attributes = new HashMap<>();
+                    
                         
 			return new ModelAndView(attributes, "src/add_course.html");
                 }, new PebbleTemplateEngine());
                 
                 post("/add_course", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
                     	Map<String, Object> attributes = new HashMap<>();
                         String name=request.queryParams("name");
                         String courseCode=request.queryParams("course-code");
@@ -135,6 +150,10 @@ public class WebApplication {
 		}, new PebbleTemplateEngine());
                 
                 get("/edit_course/:courseID", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
                     	Map<String, Object> attributes = new HashMap<>();
                         Course course = DatabaseDriver.getCourse(Integer.valueOf(request.params(":courseID")));
                         attributes.put("courseName",course.getCourseName());
@@ -145,7 +164,12 @@ public class WebApplication {
 			return new ModelAndView(attributes, "src/edit_course.html");
 		}, new PebbleTemplateEngine());
                 
+                
                 post("/edit_course/:courseID", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
                     	Map<String, Object> attributes = new HashMap<>();
                         Course course = DatabaseDriver.getCourse(Integer.valueOf(request.params(":courseID")));
                         String name=request.queryParams("name");
@@ -159,15 +183,16 @@ public class WebApplication {
                         course.setCourseStartDate(startDate);
                         course.setCourseEndDate(endDate);
                         course.updateInDB();
-                        
-
-                        
                         response.redirect("/courses");
                         Spark.halt();
 			return new ModelAndView(attributes, "src/edit_course.html");
                 }, new PebbleTemplateEngine());
                 
                 get("/courses", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
                     	Map<String, Object> attributes = new HashMap<>();
                         
                         List<Course> courses;
@@ -178,6 +203,10 @@ public class WebApplication {
                 }, new PebbleTemplateEngine());
                 
                 get("course/:courseID", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
                         LocalTime EARLIEST_BLOCK=LocalTime.of(0, 0);
                         LocalTime LATEST_BLOCK=LocalTime.of(23, 30);
                         System.out.println(EARLIEST_BLOCK.toString());
@@ -199,6 +228,125 @@ public class WebApplication {
 			// The hello.pebble file is located in directory:
 			// src/test/resources/spark/template/pebble
 			return new ModelAndView(attributes, "src/timetable.html");
+		}, new PebbleTemplateEngine());
+                
+                // Activity Views
+                get("/add_activity", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    	Map<String, Object> attributes = new HashMap<>();
+                        
+			return new ModelAndView(attributes, "src/add_activity.html");
+                }, new PebbleTemplateEngine());
+                
+                post("/add_activity", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    	Map<String, Object> attributes = new HashMap<>();
+                        String name=request.queryParams("name");
+                        String courseCode=request.queryParams("course-code");
+                        String courseCoordinator=request.queryParams("course-coordinator");
+                        String startDate = request.queryParams("start-date");
+                        String endDate = request.queryParams("end-date");
+                        response.redirect("courses");
+                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(name, courseCode, courseCoordinator, startDate, endDate);
+                        addedCourse.addToDB();
+			return new ModelAndView(attributes, "src/add_course.html");
+		}, new PebbleTemplateEngine());
+                
+                get("/edit_activity/:activityID", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    	Map<String, Object> attributes = new HashMap<>();
+                        Course course = DatabaseDriver.getCourse(Integer.valueOf(request.params(":courseID")));
+                        attributes.put("courseName",course.getCourseName());
+                        attributes.put("courseCode",course.getCourseCode());
+                        attributes.put("courseCoordinator",course.getCourseCoordinator());
+                        attributes.put("courseStartDate",course.getCourseStartDate());
+                        attributes.put("courseEndDate",course.getCourseEndDate());
+			return new ModelAndView(attributes, "src/edit_course.html");
+		}, new PebbleTemplateEngine());
+                
+                
+                post("/edit_activity/:activityID", (request, response) -> {
+                                        if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    	Map<String, Object> attributes = new HashMap<>();
+                        Course course = DatabaseDriver.getCourse(Integer.valueOf(request.params(":courseID")));
+                        String name=request.queryParams("name");
+                        String courseCode=request.queryParams("course-code");
+                        String courseCoordinator=request.queryParams("course-coordinator");
+                        String startDate = request.queryParams("start-date");
+                        String endDate = request.queryParams("end-date");
+                        course.setCourseName(name);
+                        course.setCourseCode(courseCode);
+                        course.setCourseCoordinator(courseCoordinator);
+                        course.setCourseStartDate(startDate);
+                        course.setCourseEndDate(endDate);
+                        course.updateInDB();
+                        
+
+                        
+                        response.redirect("/courses");
+                        Spark.halt();
+			return new ModelAndView(attributes, "src/edit_course.html");
+                }, new PebbleTemplateEngine());
+                
+                get("/activities", (request, response) -> {
+                                        if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    	Map<String, Object> attributes = new HashMap<>();
+                        
+                        List<Course> courses;
+                        courses= DatabaseDriver.getCourses();
+                        attributes.put("courses", courses);
+                        
+			return new ModelAndView(attributes, "src/courseTable.html");
+                }, new PebbleTemplateEngine());
+                
+                get("activity/:activityID", (request, response) -> {
+                                        if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                        LocalTime EARLIEST_BLOCK=LocalTime.of(0, 0);
+                        LocalTime LATEST_BLOCK=LocalTime.of(23, 30);
+                        System.out.println(EARLIEST_BLOCK.toString());
+                        System.out.println(LATEST_BLOCK.toString());
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        //String courseID = request.params("course");
+                        //CasualHRSystem.Course.Course course = CasualHRSystem.DatabaseDriver.getCourse(Integer.valueOf(courseID));
+
+                        LocalDate startOfWeek = LocalDate.now().with( TemporalAdjusters.previous( DayOfWeek.MONDAY ) );
+                        LocalDate endOfWeek = LocalDate.now().with( TemporalAdjusters.next(DayOfWeek.SUNDAY ) );
+                        
+                        ArrayList<String> datesShown = datesInRange(startOfWeek, endOfWeek);
+                        ArrayList<String> timesShown = timesInRange(EARLIEST_BLOCK, LATEST_BLOCK, 30);
+                        
+                        attributes.put("times", timesShown);
+                        attributes.put("dates", datesShown);
+
+			// The hello.pebble file is located in directory:
+			// src/test/resources/spark/template/pebble
+			return new ModelAndView(attributes, "src/timetable.html");
+		}, new PebbleTemplateEngine());
+                
+                get("logout", (request, response) -> {
+                    request.session(true).removeAttribute("user");
+                    response.redirect("/login");
+                    Spark.halt();
+                    return null;
 		}, new PebbleTemplateEngine());
                 
 	}
