@@ -33,12 +33,16 @@
       <tr>
         <td>{{i.courseID}}</td>
         <td>{{i.courseName}}</td>
+				<td>{{i.taskID}}</td>
+				<td>{{i.taskName}}</td>
         <td>{{i.activityID}}</td>
-        <td>{{i.activityName}}</td>
-				{% for j in i.staff %}
-        <td>{{j}}</td>
-				{% endfor %}
-        <td>{{i.courseEndDate}}</td>
+        <td>{{i.name}}</td>
+				<td>{{i.numStaff}}</td>
+				<td>{{i.students}}</td>
+				<td>{{i.location}}</td>
+				<td>{{i.date}}</td>
+				<td>{{i.time}}</td>
+				<td>{{i.duration}}</td>
         <td><a href="course/{{i.courseID}}" class="btn btn-primary optionbtn" role="button">View</button>
         <a href="edit_course/{{i.courseID}}" class="btn btn-warning optionbtn" role="button"><span class="fa fa-edit"></span>Edit</button>
         <a href="delete_course/{{i.courseID}}" class="btn btn-danger optionbtn" role="button"><span class="fa fa-trash"></span>Delete</button></td>

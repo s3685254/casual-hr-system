@@ -6,6 +6,8 @@
 package CasualHRSystem;
 
 import CasualHRSystem.Course.Course;
+import CasualHRSystem.Course.Task;
+import CasualHRSystem.Course.Activity;
 import CasualHRSystem.User.User;
 import com.j256.ormlite.table.TableUtils;
 import com.j256.ormlite.dao.Dao;
@@ -35,9 +37,9 @@ public class DatabaseDriver {
             File db = new File(dbLoc);
             TableUtils.createTable(conn, User.class);
             TableUtils.createTable(conn, Course.class);
-            /*
-            TableUtils.createTable(conn, Task.class);
+            //TableUtils.createTable(conn, Task.class);
             TableUtils.createTable(conn, Activity.class);
+            /*
             TableUtils.createTable(conn, CourseApplication.class);
             TableUtils.createTable(conn, VariationRequest.class);
             TableUtils.createTable(conn, StaffProposal.class
@@ -303,6 +305,41 @@ public class DatabaseDriver {
             disconnectFromDB(conn);
             List<Course> courseList = courseDao.query(preparedQuery);
             return courseList;
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+    
+        public static Activity getActivity(int activityID){
+        ConnectionSource conn = connectToDB("chrsDB.db");
+        try{
+            Dao<Activity, Integer> activityDao = DaoManager.createDao(conn, Activity.class);
+            QueryBuilder<Activity, Integer> activityQuery = activityDao.queryBuilder();
+            Where where = activityQuery.where();
+            where.eq(Activity.ID_FIELD_NAME, activityID);
+            PreparedQuery<Activity> preparedQuery = activityQuery.prepare();
+            disconnectFromDB(conn);
+            return activityDao.query(preparedQuery).get(0);
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+    
+    
+    public static List<Activity> getActivities(int courseID){
+         ConnectionSource conn = connectToDB("chrsDB.db");
+        try{
+            Dao<Activity, Integer> activityDao = DaoManager.createDao(conn, Activity.class);
+            QueryBuilder<Activity, Integer> activityQuery = activityDao.queryBuilder();
+            Where where = activityQuery.where();
+            where.eq(Activity.COURSE_ID_FIELD_NAME, courseID);
+            activityQuery.orderBy("activityID", false).prepare();
+            PreparedQuery<Activity> preparedQuery = activityQuery.prepare();
+            disconnectFromDB(conn);
+            List<Activity> activityList = activityDao.query(preparedQuery);
+            return activityList;
         } catch (SQLException e){
             System.out.println(e);
         }

@@ -15,10 +15,6 @@ import com.j256.ormlite.support.ConnectionSource;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
-/**
- *
- * @author jye
- */
 public class Course {
     public static final String ID_FIELD_NAME = "courseID";
     public static final String CODE_FIELD_NAME = "courseCode";

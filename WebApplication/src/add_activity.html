@@ -5,27 +5,7 @@
 <div style="width:500px;">
   <form method="post">
     <div class="form-group row">
-      <label for="course-id" class="col-6 col-form-label">Course ID</label>
-      <input class="form-control" type="text" value="" id="course-id" name="course-id">
-    </div>
-    <div class="form-group row">
-      <label for="course-name" class="col-6 col-form-label">Course Name</label>
-      <input class="form-control" type="text" value="" id="course-name" name="course-name">
-    </div>
 
-<div class="form-group row">
-<label for="task-id" class="col-6 col-form-label">Task ID</label>
-<input class="form-control" type="text" value="" id="task-id" name="task-id">
-</div>
-  <div class="form-group row">
-    <label for="task-name" class="col-6 col-form-label">Task Name</label>
-    <input class="form-control" type="text" value="" id="task-name" name="task-name">
-  </div>
-
-  <div class="form-group row">
-  <label for="activity-id" class="col-6 col-form-label">Activity ID</label>
-  <input class="form-control" type="text" value="" id="activity-id" name="activity-id">
-  </div>
     <div class="form-group row">
       <label for="activity-name" class="col-6 col-form-label">Activity Name</label>
       <input class="form-control" type="text" value="" id="activity-name" name="activity-name">
@@ -54,9 +34,20 @@
 
 
 <div class="form-group row">
-  <label for="date" class="col-6 col-form-label">Date</label>
+  <label for="date" class="col-6 col-form-label">Time</label>
   <select class="form-control" id="time" name="time">
     {% for i in timesAvailable %}
+      <option>
+        {{i}}
+      </option>
+      {% endfor %}
+  </select>
+</div>
+
+<div class="form-group row">
+  <label for="duration" class="col-6 col-form-label">Duration</label>
+  <select class="form-control" id="duration" name="duration">
+    {% for i in durationsAvailable %}
       <option>
         {{i}}
       </option>

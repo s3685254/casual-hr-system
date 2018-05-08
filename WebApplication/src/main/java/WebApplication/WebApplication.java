@@ -1,5 +1,6 @@
 package WebApplication;
 
+import CasualHRSystem.Course.Activity;
 import CasualHRSystem.Course.Course;
 import CasualHRSystem.DatabaseDriver;
 import spark.ModelAndView;
@@ -28,6 +29,9 @@ import org.sqlite.core.DB;
 
 public class WebApplication {
 
+                        static final LocalTime EARLIEST_BLOCK=LocalTime.of(0, 0);
+                        static final LocalTime LATEST_BLOCK=LocalTime.of(23, 30);
+    
         public static ArrayList<String> datesInRange(LocalDate startDate, LocalDate endDate){
             ArrayList<LocalDate> datesShown = new ArrayList();
             LocalDate temp = startDate;
@@ -45,14 +49,13 @@ public class WebApplication {
         public static ArrayList<String> timesInRange(LocalTime startTime, LocalTime endTime, int minutesInterval){
             ArrayList<LocalTime> timesShown = new ArrayList();
             LocalTime temp = startTime;
-            while (!temp.isAfter(endTime)){
-                timesShown.add(temp);
-                if(!temp.plusMinutes(minutesInterval).isBefore(temp)){
-                    temp=temp.plusMinutes(minutesInterval);
-                } else {
-                    break;
-                }
-                System.out.println(temp.toString());
+            timesShown.add(temp);
+            while (temp.isBefore(endTime)){
+                    timesShown.add(temp);
+                    temp = temp.plusMinutes(minutesInterval);
+                    if(temp.getHour()==0&&temp.getMinute()==0){
+                        break;
+                    }
             }
             ArrayList<String> times = new ArrayList();
             for(LocalTime i:timesShown){
@@ -61,6 +64,31 @@ public class WebApplication {
             return times;
         }
     
+        public static ArrayList<String> durationsInRange(int maxMinutes, int blockMinutes){
+            ArrayList<Duration> durationsShown = new ArrayList();
+            Duration duration = Duration.ofMinutes(blockMinutes);
+            Duration maxDuration = Duration.ofMinutes(maxMinutes);
+            
+            while (duration.compareTo(maxDuration)<=0){
+                System.out.println(duration);
+                durationsShown.add(duration);
+                duration = duration.plusMinutes(blockMinutes);
+            }
+            ArrayList<String> durations = new ArrayList();
+            for(Duration i:durationsShown){
+                String minsString = "";
+                if(i.toMinutes()%60==0){
+                    minsString = "00";
+                } else {
+                    minsString = String.valueOf(i.toMinutes()%60);
+                }
+                durations.add(String.valueOf(i.toMinutes()/60)+":"+minsString);
+            }
+            return durations;
+        }
+    
+    
+        
         public static HashMap<String,String> getParams(String request){
             HashMap hashMap = new HashMap<String,String>();
             StringTokenizer strtok = new StringTokenizer(request, "&");
@@ -207,8 +235,7 @@ public class WebApplication {
                         response.redirect("/login");
                         Spark.halt();
                     }
-                        LocalTime EARLIEST_BLOCK=LocalTime.of(0, 0);
-                        LocalTime LATEST_BLOCK=LocalTime.of(23, 30);
+
                         System.out.println(EARLIEST_BLOCK.toString());
                         System.out.println(LATEST_BLOCK.toString());
                         
@@ -231,31 +258,40 @@ public class WebApplication {
 		}, new PebbleTemplateEngine());
                 
                 // Activity Views
-                get("/add_activity", (request, response) -> {
+                get("/:courseID/add_activity", (request, response) -> {
                     if (request.session(true).attribute("user") == null){
                         response.redirect("/login");
                         Spark.halt();
                     }
                     	Map<String, Object> attributes = new HashMap<>();
-                        
+                        attributes.put("timesAvailable", timesInRange(EARLIEST_BLOCK, LATEST_BLOCK, 30));
+                        attributes.put("durationsAvailable", durationsInRange(24*60, 30));
 			return new ModelAndView(attributes, "src/add_activity.html");
                 }, new PebbleTemplateEngine());
                 
-                post("/add_activity", (request, response) -> {
+                post("/:courseID/add_activity", (request, response) -> {
+                    int courseID = Integer.valueOf(request.params(":courseID"));
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    ArrayList<String> timesAvailable = timesInRange(EARLIEST_BLOCK, LATEST_BLOCK, 30);
+                    ArrayList<String> durationsAvailable = timesInRange(EARLIEST_BLOCK, LATEST_BLOCK, 30);
                     if (request.session(true).attribute("user") == null){
                         response.redirect("/login");
                         Spark.halt();
                     }
                     	Map<String, Object> attributes = new HashMap<>();
-                        String name=request.queryParams("name");
-                        String courseCode=request.queryParams("course-code");
-                        String courseCoordinator=request.queryParams("course-coordinator");
-                        String startDate = request.queryParams("start-date");
-                        String endDate = request.queryParams("end-date");
-                        response.redirect("courses");
-                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(name, courseCode, courseCoordinator, startDate, endDate);
-                        addedCourse.addToDB();
-			return new ModelAndView(attributes, "src/add_course.html");
+                        String name=request.queryParams("activity-name");
+                        int staff=Integer.parseInt(request.queryParams("staff"));
+                        int students=Integer.parseInt(request.queryParams("students"));
+                        String location=request.queryParams("location");
+                        String date=request.queryParams("date");
+                        String time=request.queryParams("time");
+                        String duration=request.queryParams("duration");
+                        Activity addedActivity = new Activity(courseID, name, students, staff, location, date, time, duration);
+                        addedActivity.addToDB();
+			return new ModelAndView(attributes, "src/add_activity.html");
 		}, new PebbleTemplateEngine());
                 
                 get("/edit_activity/:activityID", (request, response) -> {
@@ -264,54 +300,60 @@ public class WebApplication {
                         Spark.halt();
                     }
                     	Map<String, Object> attributes = new HashMap<>();
-                        Course course = DatabaseDriver.getCourse(Integer.valueOf(request.params(":courseID")));
-                        attributes.put("courseName",course.getCourseName());
-                        attributes.put("courseCode",course.getCourseCode());
-                        attributes.put("courseCoordinator",course.getCourseCoordinator());
-                        attributes.put("courseStartDate",course.getCourseStartDate());
-                        attributes.put("courseEndDate",course.getCourseEndDate());
-			return new ModelAndView(attributes, "src/edit_course.html");
+                        Activity activity = DatabaseDriver.getActivity(Integer.valueOf(request.params(":activityID")));
+                        String name=request.queryParams("activity-name");
+                        int staff=Integer.valueOf(request.queryParams("staff"));
+                        int students=Integer.valueOf(request.queryParams("students"));
+                        String location=request.queryParams("location");
+                        String date=request.queryParams("date");
+                        String time=request.queryParams("time");
+                        activity.setName(name);
+                        activity.setNumStaff(staff);
+                        activity.setStudents(students);
+                        activity.setLocation(location);
+                        activity.setDate(date);
+                        activity.setTime(time);
+                        activity.updateInDB();
+                        return new ModelAndView(attributes, "src/edit_activity.html");
 		}, new PebbleTemplateEngine());
                 
-                
                 post("/edit_activity/:activityID", (request, response) -> {
-                                        if (request.session(true).attribute("user") == null){
+                    if (request.session(true).attribute("user") == null){
                         response.redirect("/login");
                         Spark.halt();
                     }
                     	Map<String, Object> attributes = new HashMap<>();
-                        Course course = DatabaseDriver.getCourse(Integer.valueOf(request.params(":courseID")));
-                        String name=request.queryParams("name");
-                        String courseCode=request.queryParams("course-code");
-                        String courseCoordinator=request.queryParams("course-coordinator");
-                        String startDate = request.queryParams("start-date");
-                        String endDate = request.queryParams("end-date");
-                        course.setCourseName(name);
-                        course.setCourseCode(courseCode);
-                        course.setCourseCoordinator(courseCoordinator);
-                        course.setCourseStartDate(startDate);
-                        course.setCourseEndDate(endDate);
-                        course.updateInDB();
-                        
-
-                        
-                        response.redirect("/courses");
-                        Spark.halt();
-			return new ModelAndView(attributes, "src/edit_course.html");
-                }, new PebbleTemplateEngine());
+                        Activity activity = DatabaseDriver.getActivity(Integer.valueOf(request.params(":activityID")));
+                        String name=request.queryParams("activity-name");
+                        int staff=Integer.valueOf(request.queryParams("staff"));
+                        int students=Integer.valueOf(request.queryParams("students"));
+                        String location=request.queryParams("location");
+                        String date=request.queryParams("date");
+                        String time=request.queryParams("time");
+                        activity.setName(name);
+                        activity.setNumStaff(staff);
+                        activity.setStudents(students);
+                        activity.setLocation(location);
+                        activity.setDate(date);
+                        activity.setTime(time);
+                        activity.updateInDB();
+                        response.redirect("/"+activity.getCourseID()+"/activities");
+                        return new ModelAndView(attributes, "src/edit_activity.html");
+		}, new PebbleTemplateEngine());
                 
-                get("/activities", (request, response) -> {
-                                        if (request.session(true).attribute("user") == null){
+                get("/:courseID/activities", (request, response) -> {
+                    int courseID = Integer.valueOf(request.params(":courseID"));
+                    if (request.session(true).attribute("user") == null){
                         response.redirect("/login");
                         Spark.halt();
                     }
                     	Map<String, Object> attributes = new HashMap<>();
                         
-                        List<Course> courses;
-                        courses= DatabaseDriver.getCourses();
-                        attributes.put("courses", courses);
+                        List<Activity> activities;
+                        activities= DatabaseDriver.getActivities(courseID);
+                        attributes.put("activities", activities);
                         
-			return new ModelAndView(attributes, "src/courseTable.html");
+			return new ModelAndView(attributes, "src/activityTable.html");
                 }, new PebbleTemplateEngine());
                 
                 get("activity/:activityID", (request, response) -> {
