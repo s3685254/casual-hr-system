@@ -23,15 +23,31 @@ function tableSwitch(){
 <a id = "showTimetable" href="#timetable" onclick="timetableSwitch()"> Switch to timetable view</a>
 <a id = "showTable" href="#table" onclick="tableSwitch()"> Switch to table view</a>
 
+<script>
 
+$( document ).ready(function() {
+  $.getJSON( "/courses/{{courseID}}/getActivitiesData", function( data ) {
 
-<div class="table-responsive">
+      for(i=0, len = data.length; i<len;i++){
+            try{
+              var spanHeight = 42*data[i].duration;
+        document.getElementById(data[i].date+"-"+data[i].time).innerHTML="<div style='position:absolute; width: 105px; padding:1px; height: "+spanHeight.toString()+"px; background-color:blue;'>"+data[i].name+"</div>";
+      } catch(error){
+        console.log(error);
+      }
+      };
+
+  });
+});
+</script>
+
+<div style="width:800px;">
   <table class="table table-bordered">
     <thead class="thead-light">
       <tr>
         <th scope="col">Time Block</th>
         {% for i in dates %}
-                <th scope="col">{{i}}</th>
+                <th scope="col" style="width:100px;">{{i}}</th>
         {% endfor %}
       </tr>
     </thead>
@@ -39,8 +55,8 @@ function tableSwitch(){
       {% for i in times %}
       <tr>
         <th scope="table" class="table-light">{{i}}</th>
-        {% for i in dates %}
-          <td>X</td>
+        {% for j in dates %}
+          <td style="overflow: visible; padding: 0px;" id="{{j}}-{{i}}" name="">X</td>
         {% endfor %}
       </tr>
       {% endfor %}
@@ -48,33 +64,6 @@ function tableSwitch(){
   </table>
 </div>
 
-<table id="data" class="table table-dark table-hover">
-  <thead>
-    <tr>
-      <th scope="col" width="80px;">Select</th>
-      {% for field in fields %}
-      <th scope="col">{{field}}</th>
-      {% endfor %} {% for action in enabled_actions %}
-      <th scope="col" style="width:40px;"></th>
-      {% endfor %}
-
-    </tr>
-  </thead>
-  <tbody>
-    {% for item in items %}
-    <tr id="{{item[0]}}">
-      <td><input type="checkbox" id="select{{item[0]}}" onchange='highlight({{item[0]}});' autocomplete="off"></td>
-      {% for attribute in item %}
-      <td>{{attribute}}</td>
-      {% endfor %} {% for action in enabled_actions %}
-      <img href={{enabled_actions[ 'icon']}}>
-      <span class="glyphicon glyphicon-remove"></span> {% endfor %}
-      <th scope="col" style="width:40px;"><span class="fa fa-edit" data-toggle="modal" data-target="#editModal_{{item[0]}}"></span></th>
-      <th scope="col" style="width:40px;"><span class="fa fa-trash"></span></th>
-    </tr>
-    {% endfor %}
-  </tbody>
-</table>
 
 <!--
 

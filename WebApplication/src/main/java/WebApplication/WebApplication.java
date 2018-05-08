@@ -14,6 +14,8 @@ import static spark.Spark.get;
 import static spark.Spark.post;
 import static spark.Spark.redirect;
 
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import com.google.gson.*;
 import java.net.URL;
 import java.util.StringTokenizer;
@@ -27,10 +29,13 @@ import java.util.ArrayList;
 import java.util.List;
 import org.sqlite.core.DB;
 
+
+
 public class WebApplication {
 
                         static final LocalTime EARLIEST_BLOCK=LocalTime.of(0, 0);
                         static final LocalTime LATEST_BLOCK=LocalTime.of(23, 30);
+                        static final int BLOCK_MINUTES = 30;
     
         public static ArrayList<String> datesInRange(LocalDate startDate, LocalDate endDate){
             ArrayList<LocalDate> datesShown = new ArrayList();
@@ -66,13 +71,13 @@ public class WebApplication {
     
         public static ArrayList<String> durationsInRange(int maxMinutes, int blockMinutes){
             ArrayList<Duration> durationsShown = new ArrayList();
-            Duration duration = Duration.ofMinutes(blockMinutes);
+            Duration duration = Duration.ofMinutes(BLOCK_MINUTES);
             Duration maxDuration = Duration.ofMinutes(maxMinutes);
             
             while (duration.compareTo(maxDuration)<=0){
                 System.out.println(duration);
                 durationsShown.add(duration);
-                duration = duration.plusMinutes(blockMinutes);
+                duration = duration.plusMinutes(BLOCK_MINUTES);
             }
             ArrayList<String> durations = new ArrayList();
             for(Duration i:durationsShown){
@@ -235,7 +240,7 @@ public class WebApplication {
                         response.redirect("/login");
                         Spark.halt();
                     }
-
+                        int courseID = Integer.parseInt(request.params(":courseID"));
                         System.out.println(EARLIEST_BLOCK.toString());
                         System.out.println(LATEST_BLOCK.toString());
                         
@@ -251,6 +256,7 @@ public class WebApplication {
                         
                         attributes.put("times", timesShown);
                         attributes.put("dates", datesShown);
+                        attributes.put("courseID", courseID);
 
 			// The hello.pebble file is located in directory:
 			// src/test/resources/spark/template/pebble
@@ -384,7 +390,33 @@ public class WebApplication {
 			return new ModelAndView(attributes, "src/timetable.html");
 		}, new PebbleTemplateEngine());
                 
-                get("logout", (request, response) -> {
+                get("/courses/:courseID/getActivitiesData", (request, response) -> {
+                    int courseID = Integer.parseInt(request.params(":courseID"));
+                    JSONArray activitiesList = new JSONArray();
+                    
+                    for(Activity i:DatabaseDriver.getActivities(courseID)){
+                        JSONObject activity = new JSONObject();
+                        activity.put("name",i.getName());
+                        activity.put("date",i.getDate());
+                        activity.put("time",i.getTime());
+                        String[] durationParts = i.getDuration().split(":");
+                        int hours = 0;
+                        int minutes = 0;
+                        for(String j:durationParts){
+                            hours = Integer.parseInt(durationParts[0]);
+                            minutes = Integer.parseInt(durationParts[1]);
+                        }
+                        int totalMinutes = hours*60+minutes;
+                        activity.put("duration",totalMinutes/BLOCK_MINUTES);
+                        activitiesList.add(activity);
+                    }
+                    
+                    response.type("application/json");
+                    System.out.println(activitiesList.toJSONString());
+                    return activitiesList.toJSONString();
+                });
+                
+                get("/logout", (request, response) -> {
                     request.session(true).removeAttribute("user");
                     response.redirect("/login");
                     Spark.halt();

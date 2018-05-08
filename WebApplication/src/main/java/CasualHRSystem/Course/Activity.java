@@ -240,5 +240,19 @@ public class Activity {
     public void setNumStaff(int numStaff) {
         this.numStaff = numStaff;
     }
+
+    /**
+     * @return the duration
+     */
+    public String getDuration() {
+        return duration;
+    }
+
+    /**
+     * @param duration the duration to set
+     */
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
     
 }
