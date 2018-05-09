@@ -5,13 +5,14 @@
  */
 package CasualHRSystem.Request;
 
+import com.j256.ormlite.field.DatabaseField;
+
 /**
  *
  * @author jye
  */
 public class StaffProposal extends Request {
-    String course;
-    int staffName;
-    int staffIDs;
-    int staffActivitiesID;
+    public static final String PROPOSAL_ID_FIELD_NAME = "proposalID";
+    @DatabaseField(generatedId=true, columnName = PROPOSAL_ID_FIELD_NAME)
+    int proposalID;
 }

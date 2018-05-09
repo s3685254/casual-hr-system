@@ -24,7 +24,9 @@
 	      </li>
 			<!-- Personalised Timetable -->
 	      <li class="nav-item">
-	        <a class="nav-link" href="/timetable">My Timetable</a>
+					{% if user.type == "casual" %}
+	        	<a class="nav-link" href="/timetable">My Timetable</a>
+					{% endif %}
 	      </li>
 			<!-- Courses -->
 	      <li class="nav-item">

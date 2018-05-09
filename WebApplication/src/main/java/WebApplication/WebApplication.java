@@ -3,6 +3,10 @@ package WebApplication;
 import CasualHRSystem.Course.Activity;
 import CasualHRSystem.Course.Course;
 import CasualHRSystem.DatabaseDriver;
+import CasualHRSystem.User.Admin;
+import CasualHRSystem.User.Approvals;
+import CasualHRSystem.User.CasualStaffMember;
+import CasualHRSystem.User.CourseCoordinator;
 import spark.ModelAndView;
 import spark.template.pebble.PebbleTemplateEngine;
 
@@ -17,6 +21,7 @@ import static spark.Spark.redirect;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import com.google.gson.*;
+import com.sun.xml.internal.bind.v2.runtime.Coordinator;
 import java.net.URL;
 import java.util.StringTokenizer;
 
@@ -31,10 +36,11 @@ import org.sqlite.core.DB;
 
 
 
+
 public class WebApplication {
 
-                        static final LocalTime EARLIEST_BLOCK=LocalTime.of(0, 0);
-                        static final LocalTime LATEST_BLOCK=LocalTime.of(23, 30);
+                        static final LocalTime EARLIEST_BLOCK=LocalTime.of(8, 30);
+                        static final LocalTime LATEST_BLOCK=LocalTime.of(20, 30);
                         static final int BLOCK_MINUTES = 30;
     
         public static ArrayList<String> datesInRange(LocalDate startDate, LocalDate endDate){
@@ -112,8 +118,6 @@ public class WebApplication {
             get("/login", (request, response) -> {
 
 
-
-
 			Map<String, Object> attributes = new HashMap<>();
 			// The hello.pebble file is located in directory:
 			// src/test/resources/spark/template/pebble
@@ -129,6 +133,7 @@ public class WebApplication {
 
                         request.session(true);
                         request.session().attribute("user",user.getEmail());
+                        request.session().attribute("userType",user.getUserType());
                         response.redirect("/dashboard");
                         Spark.halt();
                     }
@@ -235,14 +240,12 @@ public class WebApplication {
 			return new ModelAndView(attributes, "src/courseTable.html");
                 }, new PebbleTemplateEngine());
                 
-                get("course/:courseID", (request, response) -> {
+                get("/courses/:courseID", (request, response) -> {
                     if (request.session(true).attribute("user") == null){
                         response.redirect("/login");
                         Spark.halt();
                     }
                         int courseID = Integer.parseInt(request.params(":courseID"));
-                        System.out.println(EARLIEST_BLOCK.toString());
-                        System.out.println(LATEST_BLOCK.toString());
                         
                         Map<String, Object> attributes = new HashMap<>();
                         //String courseID = request.params("course");
@@ -415,6 +418,78 @@ public class WebApplication {
                     System.out.println(activitiesList.toJSONString());
                     return activitiesList.toJSONString();
                 });
+                
+                get("/add_user", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+                        if(!request.session(true).attribute("userType").equals("admin")){
+                            response.redirect("/notPermitted");
+                            Spark.halt();
+                        }
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+			return new ModelAndView(attributes, "src/add_user.html");
+		}, new PebbleTemplateEngine());
+
+                post("/add_user", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+                        if(!request.session(true).attribute("userType").equals("admin")){
+                            response.redirect("/notPermitted");
+                            Spark.halt();
+                        }
+                        
+                        String firstName=request.queryParams("first-name");
+                        String lastName=request.queryParams("last-name");
+                        String email=request.queryParams("email");
+                        String password=request.queryParams("password");
+                        String userType=request.queryParams("user-type");
+                        String nowDate = LocalDate.now().toString();
+                        
+                        if(userType.equals("admin")){
+                            Admin user = new Admin(firstName, lastName, email, userType, password);
+                            user.addToDB();
+                        } else if(userType.equals("approvals")){
+                            Approvals user = new Approvals(firstName, lastName, email, userType, password);
+                            user.addToDB();
+                        } else if(userType.equals("coordinator")){
+                                    CourseCoordinator user = new CourseCoordinator(firstName, lastName, email, userType, password);
+                                    user.addToDB();
+                        } else if(userType.equals("casual")){
+                            CasualStaffMember user = new CasualStaffMember(firstName, lastName, email, userType, password);
+                            user.addToDB();
+                        }
+                        
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+			return new ModelAndView(attributes, "src/add_user.html");
+		}, new PebbleTemplateEngine());
+                
+                get("/requests", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+                        
+                        
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+			return new ModelAndView(attributes, "src/add_user.html");
+		}, new PebbleTemplateEngine());
+                
+                get("/notPermitted", (request, response) -> {
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+			return new ModelAndView(attributes, "src/notPermitted.html");
+		}, new PebbleTemplateEngine());
                 
                 get("/logout", (request, response) -> {
                     request.session(true).removeAttribute("user");

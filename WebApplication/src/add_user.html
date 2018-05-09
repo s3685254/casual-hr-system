@@ -5,26 +5,40 @@
 <div style="width:500px;">
   <form method="post">
     <div class="form-group row">
-      <label for="course-code" class="col-6 col-form-label">Course Code</label>
-      <input class="form-control" type="text" value="{{courseCode}}" id="course-code" name="course-code">
+      <label for="first-name" class="col-6 col-form-label">First Name</label>
+      <input class="form-control" type="text" value="" id="first-name" name="first-name">
+    </div>
+    <div class="form-group row">
+      <label for="last-name" class="col-6 col-form-label">Last Name</label>
+      <input class="form-control" type="text" value="" id="last-name" name="last-name">
     </div>
 <div class="form-group row">
-  <label for="name" class="col-6 col-form-label">Course Name</label>
-  <input class="form-control" type="text" value="{{courseName}}" id="name" name="name">
+  <label for="email" class="col-6 col-form-label">Email</label>
+  <input class="form-control" type="email" value="" id="email" name="email">
 </div>
 <div class="form-group row">
-  <label for="course-coordinator" class="col-6 col-form-label">Course Coordinator</label>
-  <input class="form-control" type="text" value="{{courseCoordinator}}" id="course-coordinator" name="course-coordinator">
+  <label for="password" class="col-6 col-form-label">Password</label>
+  <input class="form-control" type="password" value="" id="password" name="password">
 </div>
 <div class="form-group row">
-  <label for="start-date" class="col-6 col-form-label">Start Date</label>
-  <input class="form-control" type="date" value="{{courseStartDate}}" id="start-date" name="start-date">
+  <label for="password" class="col-6 col-form-label">User Type</label>
+  <select class="form-control" id="user-type" name="user-type">
+    <option>
+      admin
+    </option>
+    <option>
+      approvals
+    </option>
+    <option>
+      coordinator
+    </option>
+    <option>
+      casual
+    </option>
+  </select>
 </div>
-  <label for="end-date" class="col-6 col-form-label">End Date</label>
-  <input class="form-control" type="date" value="{{courseEndDate}}" id="end-date" name="end-date">
-<div class="form-group row">
+
   <input class="form-control" type="submit" value="Submit">
-</div>
 </form>
 </div>
 

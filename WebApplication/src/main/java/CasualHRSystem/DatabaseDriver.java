@@ -47,7 +47,7 @@ public class DatabaseDriver {
             
             Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
 
-            User newUser = new User(0, "Admin", "Admin", "admin@example.com", "admin", "admin");
+            User newUser = new User("Admin", "Admin", "admin@example.com", "admin", "admin");
             accountDao.create(newUser);
             
             conn.close();
@@ -343,6 +343,10 @@ public class DatabaseDriver {
         } catch (SQLException e){
             System.out.println(e);
         }
+        return null;
+    }
+    
+    public static List<Request> getRequests(int userId){
         return null;
     }
     

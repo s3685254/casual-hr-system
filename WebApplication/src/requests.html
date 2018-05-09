@@ -1,13 +1,20 @@
 {% extends 'src/base.html' %}
 {% block content %}
 
+<h2>Pending Requests</h2>
 {% if userType=="admin"%}
 
 {% if userType=="coordinator"%}
 
 {% if userType=="approvals"%}
 
+
 {% if userType=="casual"%}
 
+  {% for i in requests.pending %}
+    <a href="{{i.id}}">{{i.courseName}}</a>
+  {% endfor %}
+
+  <h2>Request Responses</h2>
 
 {% endblock %}

@@ -5,9 +5,13 @@
  */
 package CasualHRSystem.User;
 
+import CasualHRSystem.DatabaseDriver;
+import com.j256.ormlite.dao.Dao;
 import com.j256.ormlite.table.DatabaseTable;
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.dao.DaoManager;
+import com.j256.ormlite.support.ConnectionSource;
+import java.sql.SQLException;
 import java.util.*;
 import sun.util.calendar.BaseCalendar;
 
@@ -21,7 +25,7 @@ import sun.util.calendar.BaseCalendar;
 public class User {
     public static final String EMAIL_FIELD_NAME = "email";
     
-    @DatabaseField(id = true)
+    @DatabaseField(generatedId = true)
     public int userID;
     @DatabaseField(canBeNull = false)
     private String firstName;
@@ -40,8 +44,7 @@ public class User {
     public User() {
     }
 
-    public User(int userID, String firstName, String lastName, String email, String userType, String password) {
-        this.userID = userID;
+    public User(String firstName, String lastName, String email, String userType, String password) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
@@ -50,6 +53,28 @@ public class User {
         this.dateAdded = new Date().toString();
     }
 
+       public void addToDB(){
+        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        try{
+            Dao<User, Integer> userDao = DaoManager.createDao(conn, User.class);
+            userDao.create(this);
+        } catch (SQLException e){
+            System.out.println(e.getCause());
+        }
+        DatabaseDriver.disconnectFromDB(conn);
+    }
+    
+    public void updateInDB(){
+        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        try{
+            Dao<User, Integer> userDao = DaoManager.createDao(conn, User.class);
+            userDao.update(this);
+        } catch (SQLException e){
+            System.out.println(e.getCause());
+        }
+        DatabaseDriver.disconnectFromDB(conn);
+    }
+    
     /**
      * @return the userID
      */

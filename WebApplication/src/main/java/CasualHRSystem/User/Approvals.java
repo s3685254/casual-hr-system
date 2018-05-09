@@ -16,9 +16,8 @@ public class Approvals extends User {
         this.setUserType("approvals");
     }
     
-    public Approvals(int userID, String firstName, String lastName, String email, String userType, String password, String date) {
-        super(userID, firstName, lastName, email, userType, password);
-        this.setDateAdded(date);
+    public Approvals(String firstName, String lastName, String email, String userType, String password) {
+        super(firstName, lastName, email, userType, password);;
     }
     
     public static void showMenu(){

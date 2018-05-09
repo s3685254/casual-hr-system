@@ -18,9 +18,8 @@ public class CasualStaffMember extends User {
         this.setUserType("casual");
     }
     
-    public CasualStaffMember(int userID, String firstName, String lastName, String email, String userType, String password, String date) {
-        super(userID, firstName, lastName, email, userType, password);
-        this.setDateAdded(date);
+    public CasualStaffMember(String firstName, String lastName, String email, String userType, String password) {
+        super(firstName, lastName, email, userType, password);
     }
     
     void uploadResume(String filePath){

@@ -4,28 +4,56 @@
 <h2> Edit Course </h2>
 <div style="width:500px;">
   <form method="post">
+
+<h3>Account Information</h3>
+
     <div class="form-group row">
-      <label for="course-code" class="col-6 col-form-label">Course Code</label>
-      <input class="form-control" type="text" value="{{courseCode}}" id="course-code" name="course-code">
+      <label for="username" class="col-6 col-form-label">Username</label>
+      <input class="form-control" type="text" value="{{user-profile.username}}" id="username" name="username">
     </div>
 <div class="form-group row">
-  <label for="name" class="col-6 col-form-label">Course Name</label>
-  <input class="form-control" type="text" value="{{courseName}}" id="name" name="name">
+  <label for="email" class="col-6 col-form-label">Email</label>
+  <input class="form-control" type="email" value="{{user-profile.email}}" id="email" name="email">
 </div>
 <div class="form-group row">
-  <label for="course-coordinator" class="col-6 col-form-label">Course Coordinator</label>
-  <input class="form-control" type="text" value="{{courseCoordinator}}" id="course-coordinator" name="course-coordinator">
+  <label for="password" class="col-6 col-form-label">Password</label>
+  <input class="form-control" type="password" value="{{user-profile.password}}" id="password" name="password">
+</div>
+
+<h3> Personal Information </h3>
+
+<div class="form-group row">
+  <label for="dob" class="col-6 col-form-label">Date of Birth</label>
+  <input class="form-control" type="date" value="{{user-profile.dateOfBirth}}" id="dob" name="dob">
 </div>
 <div class="form-group row">
-  <label for="start-date" class="col-6 col-form-label">Start Date</label>
-  <input class="form-control" type="date" value="{{courseStartDate}}" id="start-date" name="start-date">
+  <label for="bio" class="col-6 col-form-label">Qualifications/Biography</label>
+  <textarea class="form-control" type="text" value="{{user-profile.biography}}" id="bio" name="bio">
 </div>
-  <label for="end-date" class="col-6 col-form-label">End Date</label>
-  <input class="form-control" type="date" value="{{courseEndDate}}" id="end-date" name="end-date">
-<div class="form-group row">
-  <input class="form-control" type="submit" value="Submit">
-</div>
+
+<h3>Payroll Data</h3>
+
 </form>
+<div class="form-group row">
+  <label for="bsb" class="col-6 col-form-label">/BSB Code</label>
+  <input class="form-control" type="text" value="{{user-profile.bsb}}" id="bsb" name="bsb">
 </div>
+<div class="form-group row">
+  <label for="account-number" class="col-6 col-form-label">Acccount Number</label>
+  <input class="form-control" type="text" value="{{user-profile.accountNumber}}" id="account-number" name="account-number">
+</div>
+<div class="form-group row">
+  <label for="account-name" class="col-6 col-form-label">Account Name</label>
+  <input class="form-control" type="text" value="{{user-profile.accountName}}" id="account-name" name="account-name">
+</div>
+</div>
+
+Please re-enter your password to confirm changes.
+<div class="form-group row">
+  <label for="password-confirm" class="col-6 col-form-label">Password</label>
+  <input class="form-control" type="password" value="" id="password-confirm" name="password-confirm">
+</div>
+
+  <input class="form-control" type="submit" value="Submit">
 
 {% endblock %}
