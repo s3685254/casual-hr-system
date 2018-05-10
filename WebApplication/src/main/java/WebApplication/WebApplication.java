@@ -3,6 +3,7 @@ package WebApplication;
 import CasualHRSystem.Course.Activity;
 import CasualHRSystem.Course.Course;
 import CasualHRSystem.DatabaseDriver;
+import CasualHRSystem.Request.*;
 import CasualHRSystem.User.Admin;
 import CasualHRSystem.User.Approvals;
 import CasualHRSystem.User.CasualStaffMember;
@@ -134,6 +135,7 @@ public class WebApplication {
                         request.session(true);
                         request.session().attribute("user",user.getEmail());
                         request.session().attribute("userType",user.getUserType());
+                        request.session().attribute("userID",user.getUserID());
                         response.redirect("/dashboard");
                         Spark.halt();
                     }
@@ -477,12 +479,95 @@ public class WebApplication {
                             Spark.halt();
                         }
                         
+                        Map<String, Object> attributes = new HashMap<>();
                         
+                        attributes.put("user", request.session(true).attribute("user"));
+                        attributes.put("userType", request.session(true).attribute("userType"));
+                        
+                        
+			return new ModelAndView(attributes, "src/request.html");
+		}, new PebbleTemplateEngine());
+                get("/requests/proposals/:staffProposalID", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
                         
                         Map<String, Object> attributes = new HashMap<>();
                         
-			return new ModelAndView(attributes, "src/add_user.html");
+                        attributes.put("user", request.session(true).attribute("user"));
+                        attributes.put("userType", request.session(true).attribute("userType"));
+                        
+                        
+			return new ModelAndView(attributes, "src/request.html");
 		}, new PebbleTemplateEngine());
+                
+                get("/requests/apply", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+                        attributes.put("user", request.session(true).attribute("user"));
+                        attributes.put("userType", request.session(true).attribute("userType"));
+                        List<Course> courses;
+                        courses= DatabaseDriver.getCourses();
+                        attributes.put("courses", courses);     
+                        return new ModelAndView(attributes, "src/apply.html");
+		}, new PebbleTemplateEngine());
+                
+                post("/requests/apply", (request, response) -> {
+                        String courseName = request.queryParams("course-name");
+                        Course course = DatabaseDriver.getCourse(courseName);
+                        String resume = null;
+                        System.out.println(request.session(true).attribute("userID").toString());
+                        CourseApplication application = new CourseApplication(course.getCourseID(),request.session(true).attribute("userID"));
+                        application.addToDB();
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+                        attributes.put("user", request.session(true).attribute("user"));
+                        attributes.put("userType", request.session(true).attribute("userType"));
+                        
+                        
+			return new ModelAndView(attributes, "src/apply.html");
+		}, new PebbleTemplateEngine());
+                
+                get("/requests/submitStaffProposal", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+                        attributes.put("user", request.session(true).attribute("user"));
+                        attributes.put("userType", request.session(true).attribute("userType"));
+                        
+                        
+			return new ModelAndView(attributes, "src/request.html");
+		}, new PebbleTemplateEngine());
+                
+                get("/requests/course/:courseID", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+                        
+                    int courseID = Integer.parseInt(request.params(":courseID"));
+                    
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+                        attributes.put("user", request.session(true).attribute("user"));
+                        attributes.put("userType", request.session(true).attribute("userType"));
+                        
+                    attributes.put("applications", DatabaseDriver.getApplications(courseID));
+                    
+			return new ModelAndView(attributes, "src/viewApplications.html");
+		}, new PebbleTemplateEngine());
+                
                 
                 get("/notPermitted", (request, response) -> {
                         

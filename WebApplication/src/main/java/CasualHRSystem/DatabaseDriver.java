@@ -39,11 +39,15 @@ public class DatabaseDriver {
             TableUtils.createTable(conn, Course.class);
             //TableUtils.createTable(conn, Task.class);
             TableUtils.createTable(conn, Activity.class);
-            /*
+            
             TableUtils.createTable(conn, CourseApplication.class);
+            //TableUtils.createTable(conn, StaffProposal.class);
+            
+            /*
             TableUtils.createTable(conn, VariationRequest.class);
-            TableUtils.createTable(conn, StaffProposal.class
             */
+            
+            
             
             Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
 
@@ -294,6 +298,22 @@ public class DatabaseDriver {
         return null;
     }
     
+    public static Course getCourse(String name){
+        ConnectionSource conn = connectToDB("chrsDB.db");
+        System.out.println(name);
+        try{
+            Dao<Course, String> courseDao = DaoManager.createDao(conn, Course.class);
+            QueryBuilder<Course, String> courseQuery = courseDao.queryBuilder();
+            Where where = courseQuery.where();
+            where.eq(Course.NAME_FIELD_NAME, name);
+            PreparedQuery<Course> preparedQuery = courseQuery.prepare();
+            disconnectFromDB(conn);
+            return courseDao.query(preparedQuery).get(0);
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
     
     public static List<Course> getCourses(){
          ConnectionSource conn = connectToDB("chrsDB.db");
@@ -340,6 +360,22 @@ public class DatabaseDriver {
             disconnectFromDB(conn);
             List<Activity> activityList = activityDao.query(preparedQuery);
             return activityList;
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+    
+        public static List<CourseApplication> getApplications(int courseApplicationID){
+         ConnectionSource conn = connectToDB("chrsDB.db");
+        try{
+            Dao<CourseApplication, Integer> courseApplicationDao = DaoManager.createDao(conn, CourseApplication.class);
+            QueryBuilder<CourseApplication, Integer> courseApplicationQuery = courseApplicationDao.queryBuilder();
+            courseApplicationQuery.orderBy("applicationID", false).prepare();
+            PreparedQuery<CourseApplication> preparedQuery = courseApplicationQuery.prepare();
+            disconnectFromDB(conn);
+            List<CourseApplication> courseApplicationList = courseApplicationDao.query(preparedQuery);
+            return courseApplicationList;
         } catch (SQLException e){
             System.out.println(e);
         }

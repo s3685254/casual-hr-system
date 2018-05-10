@@ -29,7 +29,7 @@ public class Course {
     private int courseID;
     @DatabaseField(canBeNull = false, columnName = CODE_FIELD_NAME)
     private String courseCode;
-    @DatabaseField(canBeNull = false, columnName = NAME_FIELD_NAME)
+    @DatabaseField(canBeNull = false, unique = true, columnName = NAME_FIELD_NAME)
     private String courseName;
     @DatabaseField(canBeNull = true, columnName = COORDINATOR_FIELD_NAME)
     private String courseCoordinator;
