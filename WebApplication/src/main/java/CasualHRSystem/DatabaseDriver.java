@@ -23,13 +23,14 @@ import java.util.Scanner;
 import CasualHRSystem.Request.*;
 import java.sql.SQLException;
 
-
 /**
  *
  * @author jye
  */
 public class DatabaseDriver {
     
+    public final static String dbLoc = "chrsDB.db";
+
     public static void initDB(String dbLoc){
         ConnectionSource conn = null;
         try{
@@ -103,7 +104,7 @@ public class DatabaseDriver {
     ConnectionSource conn = null;
         try{
             
-            conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
+            conn = new JdbcConnectionSource("jdbc:sqlite:"+dbLoc);
             Dao<User, String> accountDao = DaoManager.createDao(conn, User.class);
         QueryBuilder<User, String> userQuery = accountDao.queryBuilder();
       // the 'password' field must be equal to "qwerty"
@@ -138,7 +139,7 @@ public class DatabaseDriver {
         Scanner scanner = new Scanner(System.in);
                 try{
 
-         conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
+         conn = new JdbcConnectionSource("jdbc:sqlite:"+dbLoc);
          
         Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
         QueryBuilder<User, Integer> userQuery = accountDao.queryBuilder();
@@ -205,7 +206,7 @@ public class DatabaseDriver {
         ConnectionSource conn = null;
                 try{
 
-         conn = new JdbcConnectionSource("jdbc:sqlite:chrsDB.db");
+         conn = new JdbcConnectionSource("jdbc:sqlite:"+dbLoc);
          
         Dao<User, Integer> accountDao = DaoManager.createDao(conn, User.class);
         QueryBuilder<User, Integer> userQuery = accountDao.queryBuilder();
@@ -234,7 +235,7 @@ public class DatabaseDriver {
     }
     
     public static void addCourse(){
-        ConnectionSource conn=connectToDB("chrsDB.db");
+        ConnectionSource conn=connectToDB(DatabaseDriver.dbLoc);
         
     }
     
@@ -282,7 +283,7 @@ public class DatabaseDriver {
     */
     
     public static Course getCourse(int courseID){
-        ConnectionSource conn = connectToDB("chrsDB.db");
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
             QueryBuilder<Course, Integer> courseQuery = courseDao.queryBuilder();
@@ -298,7 +299,7 @@ public class DatabaseDriver {
     }
     
     public static Course getCourse(String name){
-        ConnectionSource conn = connectToDB("chrsDB.db");
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         System.out.println(name);
         try{
             Dao<Course, String> courseDao = DaoManager.createDao(conn, Course.class);
@@ -315,7 +316,7 @@ public class DatabaseDriver {
     }
     
     public static List<Course> getCourses(){
-         ConnectionSource conn = connectToDB("chrsDB.db");
+         ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
             QueryBuilder<Course, Integer> courseQuery = courseDao.queryBuilder();
@@ -331,7 +332,7 @@ public class DatabaseDriver {
     }
 
             public static Task getTask(int taskID){
-        ConnectionSource conn = connectToDB("chrsDB.db");
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Task, Integer> taskDao = DaoManager.createDao(conn, Task.class);
             QueryBuilder<Task, Integer> taskQuery = taskDao.queryBuilder();
@@ -348,7 +349,7 @@ public class DatabaseDriver {
     
     
     public static List<Task> getTasks(int courseID){
-         ConnectionSource conn = connectToDB("chrsDB.db");
+         ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Task, Integer> taskDao = DaoManager.createDao(conn, Task.class);
             QueryBuilder<Task, Integer> taskQuery = taskDao.queryBuilder();
@@ -366,7 +367,7 @@ public class DatabaseDriver {
     }
     
         public static Activity getActivity(int activityID){
-        ConnectionSource conn = connectToDB("chrsDB.db");
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Activity, Integer> activityDao = DaoManager.createDao(conn, Activity.class);
             QueryBuilder<Activity, Integer> activityQuery = activityDao.queryBuilder();
@@ -383,7 +384,7 @@ public class DatabaseDriver {
     
     
     public static List<Activity> getActivities(int courseID){
-         ConnectionSource conn = connectToDB("chrsDB.db");
+         ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Activity, Integer> activityDao = DaoManager.createDao(conn, Activity.class);
             QueryBuilder<Activity, Integer> activityQuery = activityDao.queryBuilder();
@@ -401,7 +402,7 @@ public class DatabaseDriver {
     }
     
         public static CourseApplication getApplication(int courseApplicationID){
-        ConnectionSource conn = connectToDB("chrsDB.db");
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<CourseApplication, Integer> courseApplicationDao = DaoManager.createDao(conn, CourseApplication.class);
             QueryBuilder<CourseApplication, Integer> courseApplicationQuery = courseApplicationDao.queryBuilder();
@@ -417,7 +418,7 @@ public class DatabaseDriver {
     }
     
         public static List<CourseApplication> getApplications(int courseID){
-         ConnectionSource conn = connectToDB("chrsDB.db");
+         ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<CourseApplication, Integer> courseApplicationDao = DaoManager.createDao(conn, CourseApplication.class);
             QueryBuilder<CourseApplication, Integer> courseApplicationQuery = courseApplicationDao.queryBuilder();

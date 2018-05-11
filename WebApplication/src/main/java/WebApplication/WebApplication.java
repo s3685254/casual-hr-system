@@ -2,6 +2,7 @@ package WebApplication;
 
 import CasualHRSystem.Course.Activity;
 import CasualHRSystem.Course.Course;
+import CasualHRSystem.Course.Task;
 import CasualHRSystem.DatabaseDriver;
 import CasualHRSystem.Request.*;
 import CasualHRSystem.User.Admin;
@@ -22,7 +23,6 @@ import static spark.Spark.redirect;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import com.google.gson.*;
-import com.sun.xml.internal.bind.v2.runtime.Coordinator;
 import java.net.URL;
 import java.util.StringTokenizer;
 
@@ -113,10 +113,11 @@ public class WebApplication {
         }
     
 	public static void main(String[] args) {
-            DatabaseDriver.initDB("chrsDB.db");
+            DatabaseDriver.initDB(DatabaseDriver.dbLoc);
             Spark.staticFiles.location("/static");
             Logger logger = LoggerFactory.getLogger(WebApplication.class);
            
+            
             get("/login", (request, response) -> {
 
 
@@ -263,11 +264,76 @@ public class WebApplication {
                         attributes.put("times", timesShown);
                         attributes.put("dates", datesShown);
                         attributes.put("courseID", courseID);
+                        attributes.put("activities", DatabaseDriver.getActivities(courseID));
+                        attributes.put("tasks", DatabaseDriver.getTasks(courseID));
 
 			// The hello.pebble file is located in directory:
 			// src/test/resources/spark/template/pebble
 			return new ModelAndView(attributes, "src/timetable.html");
 		}, new PebbleTemplateEngine());
+                
+                //Task Views
+                get("/:courseID/add_task", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    	Map<String, Object> attributes = new HashMap<>();
+                        attributes.put("timesAvailable", timesInRange(EARLIEST_BLOCK, LATEST_BLOCK, 30));
+                        attributes.put("durationsAvailable", durationsInRange(24*60, 30));
+			return new ModelAndView(attributes, "src/add_task.html");
+                }, new PebbleTemplateEngine());
+                
+                post("/:courseID/add_task", (request, response) -> {
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    int courseID = Integer.valueOf(request.params(":courseID"));
+                    ArrayList<String> timesAvailable = timesInRange(EARLIEST_BLOCK, LATEST_BLOCK, 30);
+                    ArrayList<String> durationsAvailable = timesInRange(EARLIEST_BLOCK, LATEST_BLOCK, 30);
+                    if (request.session(true).attribute("user") == null){
+                        response.redirect("/login");
+                        Spark.halt();
+                    }
+                    	Map<String, Object> attributes = new HashMap<>();
+                        String name=request.queryParams("task-name");
+                        int staff=Integer.parseInt(request.queryParams("staff"));
+                        int students=Integer.parseInt(request.queryParams("students"));
+                        String location=request.queryParams("location");
+                        String day=request.queryParams("day");
+                        String time=request.queryParams("time");
+                        String duration=request.queryParams("duration");
+                        String frequency=request.queryParams("frequency");
+                        Task addedTask = new Task(name, location, students, staff, day, frequency, duration, time);
+                        addedTask.addToDB();
+                        
+                        Course course = DatabaseDriver.getCourse(courseID);
+                        LocalDate startDate = LocalDate.parse(course.getCourseStartDate());
+                        LocalDate endDate = LocalDate.parse(course.getCourseEndDate());
+                        LocalDate tempDate = startDate;
+                        while(tempDate.isBefore(endDate)){
+                                                    if(frequency.equals("Weekly")){
+                            tempDate=tempDate.plusWeeks(1);
+                            
+                        } else if(frequency.equals("Fortnightly")){
+                            tempDate=tempDate.plusWeeks(2);
+                            
+                        } else if(frequency.equals("Monthly")){
+                            tempDate=tempDate.plusMonths(1);
+                        }
+                            LocalDate toAdd = tempDate.with(TemporalAdjusters.next(DayOfWeek.valueOf(day.toUpperCase()) ));
+                            if(toAdd.isBefore(endDate)){
+                                Activity activity = new Activity(courseID, name, students, staff, location, toAdd.toString(), time, duration);
+                                activity.addToDB();
+                            }
+                        }
+                        
+                        response.redirect("/courses/"+String.valueOf(courseID));
+                        Spark.halt();
+			return new ModelAndView(attributes, "src/add_task.html");
+		}, new PebbleTemplateEngine());
+                
                 
                 // Activity Views
                 get("/:courseID/add_activity", (request, response) -> {
@@ -303,6 +369,8 @@ public class WebApplication {
                         String duration=request.queryParams("duration");
                         Activity addedActivity = new Activity(courseID, name, students, staff, location, date, time, duration);
                         addedActivity.addToDB();
+                        response.redirect("/courses/"+String.valueOf(courseID));
+                        Spark.halt();
 			return new ModelAndView(attributes, "src/add_activity.html");
 		}, new PebbleTemplateEngine());
                 
@@ -350,6 +418,7 @@ public class WebApplication {
                         activity.setTime(time);
                         activity.updateInDB();
                         response.redirect("/"+activity.getCourseID()+"/activities");
+                        Spark.halt();
                         return new ModelAndView(attributes, "src/edit_activity.html");
 		}, new PebbleTemplateEngine());
                 
@@ -472,7 +541,8 @@ public class WebApplication {
                         
                         
                         Map<String, Object> attributes = new HashMap<>();
-                        
+                        response.redirect("/dashboard");
+                        Spark.halt();
 			return new ModelAndView(attributes, "src/add_user.html");
 		}, new PebbleTemplateEngine());
                 

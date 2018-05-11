@@ -4,19 +4,7 @@
 <h2> Add a new Task </h2>
 
 <form method="post">
-  <div class="form-group row">
-    <label for="course-id" class="col-6 col-form-label">Course ID</label>
-    <input class="form-control" type="text" value="" id="course-id" name="course-id">
-  </div>
-  <div class="form-group row">
-    <label for="course-name" class="col-6 col-form-label">Course Name</label>
-    <input class="form-control" type="text" value="" id="course-name" name="course-name">
-  </div>
 
-<div class="form-group row">
-<label for="task-id" class="col-6 col-form-label">Task ID</label>
-<input class="form-control" type="text" value="" id="task-id" name="task-id">
-</div>
 <div class="form-group row">
   <label for="task-name" class="col-6 col-form-label">Task Name</label>
   <input class="form-control" type="text" value="" id="task-name" name="task-name">
@@ -36,6 +24,24 @@
 <label for="location" class="col-6 col-form-label">Location</label>
 <input class="form-control" type="text" id="location" name="location">
 </div>
+
+<label for="date">Time</label>
+<select class="form-control" id="time" name="time">
+  {% for i in timesAvailable %}
+    <option>
+      {{i}}
+    </option>
+    {% endfor %}
+</select>
+
+<label for="duration">Duration</label>
+<select class="form-control" id="duration" name="duration">
+  {% for i in durationsAvailable %}
+    <option>
+      {{i}}
+    </option>
+    {% endfor %}
+</select>
 
 <div class="form-group row">
   <label for="day" class="col-6 col-form-label">Day</label>
@@ -65,27 +71,21 @@
 </div>
 
 <div class="form-group row">
-  <label for="repeating" class="col-6 col-form-label">Day</label>
-  <input class="form-control" type="checkbox" value="" id="repeating" name="repeating">
-</div>
-
-<div class="form-group row">
   <label for="frequency" class="col-6 col-form-label">Day</label>
   <select class="form-control" id="frequency" name="frequency">
-    <option>
-      Daily
-    </option>
-      <option>
+
+      <option value="Weekly">
         Weekly
       </option>
-        <option>
+        <option value="Fortnightly">
           Fortnightly
         </option>
-          <option>
+          <option value="Monthly">
             Monthly
           </option>
   </select>
 </div>
+<input type="submit" value="Submit">
 </form>
 
 {% endblock %}

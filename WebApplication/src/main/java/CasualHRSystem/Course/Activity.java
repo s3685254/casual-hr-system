@@ -71,7 +71,7 @@ public class Activity {
     
     
         public void addToDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Activity, Integer> activityDao = DaoManager.createDao(conn, Activity.class);
             activityDao.create(this);
@@ -82,7 +82,7 @@ public class Activity {
     }
     
     public void updateInDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Activity, Integer> activityDao = DaoManager.createDao(conn, Activity.class);
             activityDao.update(this);

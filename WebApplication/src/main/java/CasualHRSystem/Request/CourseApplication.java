@@ -35,7 +35,7 @@ public class CourseApplication extends Request {
     }
     
             public void addToDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<CourseApplication, Integer> courseApplicationDao = DaoManager.createDao(conn, CourseApplication.class);
             courseApplicationDao.create(this);
@@ -46,7 +46,7 @@ public class CourseApplication extends Request {
     }
     
     public void updateInDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<CourseApplication, Integer> courseApplicationDao = DaoManager.createDao(conn, CourseApplication.class);
             courseApplicationDao.update(this);

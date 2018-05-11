@@ -24,8 +24,8 @@ function tableSwitch(){
 }
 </script>
 
-<a id = "showTimetable" href="#timetable" onclick="timetableSwitch()"> Switch to timetable view</a>
-<a id = "showTable" href="#table" onclick="tableSwitch()" style="display:none;"> Switch to table view</a>
+<a id = "showTimetable" href="#timetable" onclick="timetableSwitch()" style="display:none;"> Switch to timetable view</a>
+<a id = "showTable" href="#table" onclick="tableSwitch()"> Switch to table view</a>
 
 <script>
 
@@ -49,11 +49,10 @@ $( document ).ready(function() {
 
   <h2>Tasks</h2>
 
-  <a href="/add_course" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Task</a>
+  <a href="/{{courseID}}/add_task" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Task</a>
 <div class="table-responsive">
   <table class="table table-bordered">
     <thead class="thead-light">
-      <h2> Courses </h2>
       <tr>
         <th scope="col">Task ID</th>
         <th scope="col">Day</th>
@@ -65,7 +64,7 @@ $( document ).ready(function() {
       </tr>
     </thead>
     <tbody>
-      {% for i in activities %}
+      {% for i in tasks %}
       <tr>
         <td>{{i.taskID}}</td>
         <td>{{i.day}}</td>
@@ -82,7 +81,7 @@ $( document ).ready(function() {
 
 <h2>Activities</h2>
 
-<a href="/add_course" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Activity</a>
+<a href="/{{courseID}}/add_activity" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Activity</a>
 <div class="table-responsive">
 <table class="table table-bordered">
   <thead class="thead-light">

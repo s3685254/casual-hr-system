@@ -29,36 +29,50 @@ public class Task {
     public static final String FREQUENCY_FIELD_NAME = "frequency";
     public static final String DATE_FIELD_NAME = "date";
     public static final String TIME_FIELD_NAME = "time";
+    public static final String DURATION_FIELD_NAME = "duration";
     
     @DatabaseField(generatedId = true, columnName = TASK_ID_FIELD_NAME)
     private int taskID;
     @DatabaseField(columnName = COURSE_ID_FIELD_NAME)
     private int courseID;    
     @DatabaseField(columnName = NAME_FIELD_NAME)
-    private int name;
+    private String name;
     @DatabaseField(canBeNull = false, columnName = LOCATION_FIELD_NAME)
     private String location;
     @DatabaseField(canBeNull = false, columnName = STUDENTS_FIELD_NAME)
     private int students;
-    @DatabaseField(canBeNull = false, columnName = STAFF_FIELD_NAME)
+    @DatabaseField(canBeNull = true, columnName = STAFF_FIELD_NAME)
     private String staff;
     @DatabaseField(canBeNull = false, columnName = NUM_STAFF_FIELD_NAME)
     private int numStaff;
     @DatabaseField(canBeNull = false, columnName = DAY_FIELD_NAME)
     private String day;
-    @DatabaseField(canBeNull = false, columnName = REPEATING_FIELD_NAME)
+    @DatabaseField(canBeNull = true, columnName = REPEATING_FIELD_NAME)
     private String repeating;
     @DatabaseField(canBeNull = false, columnName = FREQUENCY_FIELD_NAME)
     private String frequency;
     @DatabaseField(canBeNull = true, columnName = TIME_FIELD_NAME)
     private String time;
+    @DatabaseField(canBeNull = true, columnName = DURATION_FIELD_NAME)
+    private String duration;
     
     public Task(){
         
     }
     
+    public Task(String name, String location, int students, int numStaff, String day, String frequency, String duration, String time){
+        this.name = name;
+        this.location = location;
+        this.students = students;
+        this.numStaff = numStaff;
+        this.day = day;
+        this.frequency = frequency;
+        this.duration = duration;
+        this.time = time;
+    }
+    
     public void addToDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Task, Integer> taskDao = DaoManager.createDao(conn, Task.class);
             taskDao.create(this);
@@ -69,7 +83,7 @@ public class Task {
     }
     
     public void updateInDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Task, Integer> taskDao = DaoManager.createDao(conn, Task.class);
             taskDao.update(this);
@@ -114,14 +128,14 @@ public class Task {
     /**
      * @return the name
      */
-    public int getName() {
+    public String getName() {
         return name;
     }
 
     /**
      * @param name the name to set
      */
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 

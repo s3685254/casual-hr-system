@@ -49,7 +49,7 @@ public class StaffPlacement {
     
     
     public void addToDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<StaffPlacement, Integer> placementDao = DaoManager.createDao(conn, StaffPlacement.class);
             placementDao.create(this);

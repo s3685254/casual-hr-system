@@ -24,8 +24,8 @@ function tableSwitch(){
 }
 </script>
 
-<a id = "showTimetable" href="#timetable" onclick="timetableSwitch()"> Switch to timetable view</a>
-<a id = "showTable" href="#table" onclick="tableSwitch()" style="display:none;"> Switch to table view</a>
+<a id = "showTimetable" href="#timetable" onclick="timetableSwitch()" style="display:none;"> Switch to timetable view</a>
+<a id = "showTable" href="#table" onclick="tableSwitch()"> Switch to table view</a>
 
 <script>
 
@@ -35,7 +35,7 @@ $( document ).ready(function() {
       for(i=0, len = data.length; i<len;i++){
             try{
               var spanHeight = 42*data[i].duration;
-        document.getElementById(data[i].date+"-"+data[i].time).innerHTML="<div style='position:absolute; width: 105px; padding:1px; height: "+spanHeight.toString()+"px; background-color:{{i.hexColour}};'>"+data[i].name+"</div>";
+        document.getElementById(data[i].date+"-"+data[i].time).innerHTML="<div style='position:absolute; width: 105px; padding:1px; height: "+spanHeight.toString()+"px; background-color:#"+data[i].colour+";'>"+data[i].name+"</div>";
       } catch(error){
         console.log(error);
       }
@@ -46,33 +46,71 @@ $( document ).ready(function() {
 </script>
 
 <div id="tables" style="display:none;">
+
+  <h2>Tasks</h2>
+
+  <a href="/{{courseID}}/add_task" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Task</a>
 <div class="table-responsive">
   <table class="table table-bordered">
     <thead class="thead-light">
-      <h2> Courses </h2>
       <tr>
-        <th scope="col">Activity ID</th>
-        <th scope="col">Date</th>
+        <th scope="col">Task ID</th>
+        <th scope="col">Day</th>
         <th scope="col">Time</th>
         <th scope="col">Staff</th>
         <th scope="col">Students</th>
         <th scope="col">Location</th>
+        <th scope="col">Duration</th>
       </tr>
     </thead>
     <tbody>
-      {% for i in activities %}
+      {% for i in tasks %}
       <tr>
-        <td>{{i.activityID}}</td>
-        <td>{{i.courseCode}}</td>
-        <td>{{i.courseName}}</td>
-        <td>{{i.courseCoordinator}}</td>
-        <td>{{i.courseStartDate}}</td>
-        <td>{{i.courseEndDate}}</td>
+        <td>{{i.taskID}}</td>
+        <td>{{i.day}}</td>
+        <td>{{i.time}}</td>
+        <td>{{i.numStaff}}</td>
+        <td>{{i.students}}</td>
+        <td>{{i.location}}</td>
+        <td>{{i.duration}}</td>
       </tr>
       {% endfor %}
     </tbody>
   </table>
 </div>
+
+<h2>Activities</h2>
+
+<a href="/{{courseID}}/add_activity" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Activity</a>
+<div class="table-responsive">
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Activity ID</th>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th scope="col">Staff</th>
+      <th scope="col">Students</th>
+      <th scope="col">Location</th>
+      <th scope="col">Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in activities %}
+    <tr>
+      <td>{{i.activityID}}</td>
+      <td>{{i.date}}</td>
+      <td>{{i.time}}</td>
+      <td>{{i.numStaff}}</td>
+      <td>{{i.students}}</td>
+      <td>{{i.location}}</td>
+      <td>{{i.duration}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
 </div>
 
 <div id="timetable" style="width:800px;">

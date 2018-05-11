@@ -59,7 +59,7 @@ public class Course {
     }
     
     public void addToDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
             courseDao.create(this);
@@ -70,7 +70,7 @@ public class Course {
     }
     
     public void updateInDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<Course, Integer> courseDao = DaoManager.createDao(conn, Course.class);
             courseDao.update(this);

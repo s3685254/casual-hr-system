@@ -26,7 +26,7 @@ public class StaffProposal extends Request {
     }
     
     public void addToDB(){
-        ConnectionSource conn = DatabaseDriver.connectToDB("chrsDB.db");
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<StaffProposal, Integer> proposalDao = DaoManager.createDao(conn, StaffProposal.class);
             proposalDao.create(this);
