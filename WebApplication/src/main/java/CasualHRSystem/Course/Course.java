@@ -32,7 +32,7 @@ public class Course {
     @DatabaseField(canBeNull = false, unique = true, columnName = NAME_FIELD_NAME)
     private String courseName;
     @DatabaseField(canBeNull = true, columnName = COORDINATOR_FIELD_NAME)
-    private String courseCoordinator;
+    private int courseCoordinator;
     @DatabaseField(canBeNull = false, columnName = START_DATE_FIELD_NAME)
     private String courseStartDate;
     @DatabaseField(canBeNull = false, columnName = END_DATE_FIELD_NAME)
@@ -44,7 +44,7 @@ public class Course {
         
     };
     
-    public Course(String name, String courseCode, String courseCoordinator, String courseStartDate, String courseEndDate){
+    public Course(String name, String courseCode, int courseCoordinator, String courseStartDate, String courseEndDate){
         this.courseName = name;
         this.courseCode = courseCode;
         this.courseCoordinator = courseCoordinator;
@@ -153,14 +153,28 @@ public class Course {
     /**
      * @return the courseCoordinator
      */
-    public String getCourseCoordinator() {
+    public int getCourseCoordinator() {
         return courseCoordinator;
     }
 
     /**
      * @param courseCoordinator the courseCoordinator to set
      */
-    public void setCourseCoordinator(String courseCoordinator) {
+    public void setCourseCoordinator(int courseCoordinator) {
         this.courseCoordinator = courseCoordinator;
+    }
+
+    /**
+     * @return the hexColour
+     */
+    public String getHexColour() {
+        return hexColour;
+    }
+
+    /**
+     * @param hexColour the hexColour to set
+     */
+    public void setHexColour(String hexColour) {
+        this.hexColour = hexColour;
     }
 }

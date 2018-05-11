@@ -33,6 +33,7 @@ import java.time.*;
 import java.time.temporal.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import org.sqlite.core.DB;
 
 
@@ -184,7 +185,7 @@ public class WebApplication {
                         String startDate = request.queryParams("start-date");
                         String endDate = request.queryParams("end-date");
                         response.redirect("courses");
-                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(name, courseCode, courseCoordinator, startDate, endDate);
+                        CasualHRSystem.Course.Course addedCourse = new CasualHRSystem.Course.Course(name, courseCode, request.session(true).attribute("userID"), startDate, endDate);
                         addedCourse.addToDB();
 			return new ModelAndView(attributes, "src/add_course.html");
 		}, new PebbleTemplateEngine());
@@ -219,7 +220,7 @@ public class WebApplication {
                         String endDate = request.queryParams("end-date");
                         course.setCourseName(name);
                         course.setCourseCode(courseCode);
-                        course.setCourseCoordinator(courseCoordinator);
+                        course.setCourseCoordinator(request.session(true).attribute("userID"));
                         course.setCourseStartDate(startDate);
                         course.setCourseEndDate(endDate);
                         course.updateInDB();
@@ -404,6 +405,8 @@ public class WebApplication {
                         activity.put("name",i.getName());
                         activity.put("date",i.getDate());
                         activity.put("time",i.getTime());
+                        Course course = DatabaseDriver.getCourse(courseID);
+                        activity.put("colour",course.getHexColour());
                         String[] durationParts = i.getDuration().split(":");
                         int hours = 0;
                         int minutes = 0;
@@ -479,14 +482,25 @@ public class WebApplication {
                             Spark.halt();
                         }
                         
+                        ArrayList<Course> courses = new ArrayList();
+                        
+                        int userID = request.session(true).attribute("userID");
+                        
+                        for(Course i:DatabaseDriver.getCourses()){
+                            if(i.getCourseCoordinator()==userID){
+                                courses.add(i); 
+                            }
+                        }
+                        
                         Map<String, Object> attributes = new HashMap<>();
                         
                         attributes.put("user", request.session(true).attribute("user"));
                         attributes.put("userType", request.session(true).attribute("userType"));
+                        attributes.put("courses", courses);
                         
-                        
-			return new ModelAndView(attributes, "src/request.html");
+			return new ModelAndView(attributes, "src/requests.html");
 		}, new PebbleTemplateEngine());
+                
                 get("/requests/proposals/:staffProposalID", (request, response) -> {
                         if (request.session(true).attribute("user") == null){
                             response.redirect("/login");
@@ -560,6 +574,9 @@ public class WebApplication {
                     
                         Map<String, Object> attributes = new HashMap<>();
                         
+                        attributes.put("tasks",DatabaseDriver.getTasks(courseID));
+                        attributes.put("activities",DatabaseDriver.getActivities(courseID));
+                        
                         attributes.put("user", request.session(true).attribute("user"));
                         attributes.put("userType", request.session(true).attribute("userType"));
                         
@@ -567,7 +584,43 @@ public class WebApplication {
                     
 			return new ModelAndView(attributes, "src/viewApplications.html");
 		}, new PebbleTemplateEngine());
-                
+
+                post("/requests/course/:courseID", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+			int courseID = Integer.parseInt(request.params(":courseID"));
+                    
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+                        StaffProposal staffProposal = new StaffProposal(courseID);
+                        int proposalID = staffProposal.getProposalID();
+                        
+                        for(String i:request.queryParams()){
+                            CourseApplication application = DatabaseDriver.getApplication(Integer.valueOf(i));
+                            String key = i;
+                            String val = request.queryParams(i);
+                            System.out.println(i + "," + request.queryParams(i));
+
+                            if(val.equals("Reject")){
+                                application.setOutcome(false);
+                                application.updateInDB();
+                            } else if(val.split("-")[0].equals("a")){
+                                int activityID = DatabaseDriver.getActivity(Integer.valueOf(val.split("-")[1])).getActivityID();
+                                StaffPlacement sp = new StaffPlacement(proposalID, application.getUserID(), activityID, "a");
+                                sp.addToDB();
+                            } else if(val.split("-")[0].equals("t")){
+                                int taskID = DatabaseDriver.getTask(Integer.valueOf(val.split("-")[1])).getTaskID();
+                                StaffPlacement sp = new StaffPlacement(proposalID, application.getUserID(), taskID, "t");
+                                sp.addToDB();
+                            }
+                        }
+                        
+                        staffProposal.addToDB();
+                        
+                        return new ModelAndView(attributes, "src/viewApplications.html");
+		}, new PebbleTemplateEngine());
                 
                 get("/notPermitted", (request, response) -> {
                         

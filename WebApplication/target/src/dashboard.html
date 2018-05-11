@@ -1,0 +1,25 @@
+{% extends "src/base.html" %}
+
+{%block content %}
+
+
+<h1>Welcome, {{User}}</h1>
+
+
+<p>
+  <span class="fa fa-bell-o"></span> You have ... new notifications.
+</p>
+<p>
+  <span class="fa fa-envelope-o"></span> You have ... new messages.
+</p>
+<p>
+  <span class="fa fa-mail-reply"></span> You have ... request replies.
+</p>
+<p>
+  <span class="fa fa-hourglass-half"></span> You have ... new requests to consider.
+</p>
+<p>
+ 	<span class="fa fa-file-pdf-o"></span> You have ... reports waiting for download.
+</p>
+
+{% endblock %}
