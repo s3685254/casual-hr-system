@@ -14,10 +14,7 @@ import java.sql.SQLException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
-/**
- *
- * @author jye
- */
+
 public class CourseApplication extends Request {
     public static final String APPLICATION_ID_FIELD_NAME = "applicationID";
     public static final String RESUME_FIELD_NAME = "resume";

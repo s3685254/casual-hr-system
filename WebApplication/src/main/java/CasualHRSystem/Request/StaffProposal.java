@@ -18,9 +18,12 @@ import java.sql.SQLException;
  */
 public class StaffProposal extends Request {
     public static final String PROPOSAL_ID_FIELD_NAME = "proposalID";
+    public static final String COURSE_NAME_FIELD_NAME = "courseName";
     @DatabaseField(generatedId=true, columnName = PROPOSAL_ID_FIELD_NAME)
     private int proposalID;
-
+    @DatabaseField(columnName = COURSE_NAME_FIELD_NAME)
+    private String courseName;
+        
     public StaffProposal(){
         
     }
@@ -36,8 +39,21 @@ public class StaffProposal extends Request {
         DatabaseDriver.disconnectFromDB(conn);
     }
     
-    public StaffProposal(int coordinatorID){
+            public void updateInDB(){
+        ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
+        try{
+            Dao<StaffProposal, Integer> staffProposalDao = DaoManager.createDao(conn, StaffProposal.class);
+            staffProposalDao.update(this);
+        } catch (SQLException e){
+            System.out.println(e.getCause());
+        }
+        DatabaseDriver.disconnectFromDB(conn);
+    }
+    
+    public StaffProposal(int coordinatorID, String courseName){
        super.setUserID(coordinatorID);
+       super.setPending(true);
+       this.courseName = courseName;
     }
 
     /**
@@ -52,6 +68,20 @@ public class StaffProposal extends Request {
      */
     public void setProposalID(int proposalID) {
         this.proposalID = proposalID;
+    }
+
+    /**
+     * @return the courseName
+     */
+    public String getCourseName() {
+        return courseName;
+    }
+
+    /**
+     * @param courseName the courseName to set
+     */
+    public void setCourseName(String courseName) {
+        this.courseName = courseName;
     }
 
 }

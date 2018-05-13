@@ -423,7 +423,9 @@ public class DatabaseDriver {
             Dao<CourseApplication, Integer> courseApplicationDao = DaoManager.createDao(conn, CourseApplication.class);
             QueryBuilder<CourseApplication, Integer> courseApplicationQuery = courseApplicationDao.queryBuilder();
             Where where = courseApplicationQuery.where();
-            where.eq(Activity.COURSE_ID_FIELD_NAME, courseID);
+            where.eq(CourseApplication.COURSE_ID_FIELD_NAME, courseID);
+            where.and();
+            where.eq(CourseApplication.PENDING_FIELD_NAME, true);
             courseApplicationQuery.orderBy("applicationID", false).prepare();
             PreparedQuery<CourseApplication> preparedQuery = courseApplicationQuery.prepare();
             disconnectFromDB(conn);
@@ -434,7 +436,99 @@ public class DatabaseDriver {
         }
         return null;
     }
+
+    public static StaffPlacement getStaffPlacement(int placementID){
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
+        try{
+            Dao<StaffPlacement, Integer> staffPlacementDao = DaoManager.createDao(conn, StaffPlacement.class);
+            QueryBuilder<StaffPlacement, Integer> staffPlacementQuery = staffPlacementDao.queryBuilder();
+            Where where = staffPlacementQuery.where();
+            where.eq(StaffPlacement.PLACEMENT_FIELD_NAME, placementID);
+            PreparedQuery<StaffPlacement> preparedQuery = staffPlacementQuery.prepare();
+            disconnectFromDB(conn);
+            return staffPlacementDao.query(preparedQuery).get(0);
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+        
     
+        public static List<StaffPlacement> getStaffPlacementsByUser(int userID){
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
+        try{
+            Dao<StaffPlacement, Integer> staffPlacementDao = DaoManager.createDao(conn, StaffPlacement.class);
+            QueryBuilder<StaffPlacement, Integer> staffPlacementQuery = staffPlacementDao.queryBuilder();
+             Where where = staffPlacementQuery.where();
+            where.eq(StaffPlacement.STAFF_ID_FIELD_NAME, userID);
+            where.and();
+            where.eq(StaffPlacement.APPROVED_FIELD_NAME, true);
+            staffPlacementQuery.orderBy("placementID", false).prepare();
+            PreparedQuery<StaffPlacement> preparedQuery = staffPlacementQuery.prepare();
+            disconnectFromDB(conn);
+            List<StaffPlacement> staffPlacementList = staffPlacementDao.query(preparedQuery);
+            return staffPlacementList;
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+    public static List<StaffPlacement> getStaffPlacements(int proposalID){
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
+        try{
+            Dao<StaffPlacement, Integer> staffPlacementDao = DaoManager.createDao(conn, StaffPlacement.class);
+            QueryBuilder<StaffPlacement, Integer> staffPlacementQuery = staffPlacementDao.queryBuilder();
+             Where where = staffPlacementQuery.where();
+            where.eq(StaffPlacement.PROPOSAL_ID_FIELD_NAME, proposalID);
+            where.and();
+            where.eq(StaffPlacement.PENDING_FIELD_NAME, true);
+            staffPlacementQuery.orderBy("placementID", false).prepare();
+            PreparedQuery<StaffPlacement> preparedQuery = staffPlacementQuery.prepare();
+            disconnectFromDB(conn);
+            List<StaffPlacement> staffPlacementList = staffPlacementDao.query(preparedQuery);
+            return staffPlacementList;
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
+        public static StaffProposal getStaffProposal(int proposalID){
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
+        try{
+            Dao<StaffProposal, Integer> staffPropsalDao = DaoManager.createDao(conn, StaffProposal.class);
+            QueryBuilder<StaffProposal, Integer> staffPropsalQuery = staffPropsalDao.queryBuilder();
+            Where where = staffPropsalQuery.where();
+            where.eq(StaffProposal.PROPOSAL_ID_FIELD_NAME, proposalID);
+            PreparedQuery<StaffProposal> preparedQuery = staffPropsalQuery.prepare();
+            disconnectFromDB(conn);
+            return staffPropsalDao.query(preparedQuery).get(0);
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+        
+    
+    public static List<StaffProposal> getStaffProposals(){
+        ConnectionSource conn = connectToDB(DatabaseDriver.dbLoc);
+        try{
+            Dao<StaffProposal, Integer> staffProposalDao = DaoManager.createDao(conn, StaffProposal.class);
+            QueryBuilder<StaffProposal, Integer> staffProposalQuery = staffProposalDao.queryBuilder();
+             Where where = staffProposalQuery.where();
+            where.eq(StaffProposal.PENDING_FIELD_NAME, true);
+            staffProposalQuery.orderBy("proposalID", false).prepare();
+            PreparedQuery<StaffProposal> preparedQuery = staffProposalQuery.prepare();
+            disconnectFromDB(conn);
+            List<StaffProposal> staffProposalList = staffProposalDao.query(preparedQuery);
+            return staffProposalList;
+        } catch (SQLException e){
+            System.out.println(e);
+        }
+        return null;
+    }
+
     public static List<Request> getRequests(int userId){
         return null;
     }

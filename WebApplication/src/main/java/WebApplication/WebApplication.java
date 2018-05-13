@@ -267,6 +267,8 @@ public class WebApplication {
                         attributes.put("activities", DatabaseDriver.getActivities(courseID));
                         attributes.put("tasks", DatabaseDriver.getTasks(courseID));
 
+                        System.out.println(DatabaseDriver.getTasks(courseID));
+                        
 			// The hello.pebble file is located in directory:
 			// src/test/resources/spark/template/pebble
 			return new ModelAndView(attributes, "src/timetable.html");
@@ -306,6 +308,7 @@ public class WebApplication {
                         String duration=request.queryParams("duration");
                         String frequency=request.queryParams("frequency");
                         Task addedTask = new Task(name, location, students, staff, day, frequency, duration, time);
+                        addedTask.setCourseID(courseID);
                         addedTask.addToDB();
                         
                         Course course = DatabaseDriver.getCourse(courseID);
@@ -489,7 +492,6 @@ public class WebApplication {
                     }
                     
                     response.type("application/json");
-                    System.out.println(activitiesList.toJSONString());
                     return activitiesList.toJSONString();
                 });
                 
@@ -552,9 +554,16 @@ public class WebApplication {
                             Spark.halt();
                         }
                         
-                        ArrayList<Course> courses = new ArrayList();
                         
                         int userID = request.session(true).attribute("userID");
+                        
+                        ArrayList<StaffPlacement> sps = new ArrayList();
+                        
+                                for(StaffPlacement i:DatabaseDriver.getStaffPlacementsByUser(userID)){
+                                        sps.add(i);
+                                }
+                        
+                        ArrayList<Course> courses = new ArrayList();
                         
                         for(Course i:DatabaseDriver.getCourses()){
                             if(i.getCourseCoordinator()==userID){
@@ -567,6 +576,8 @@ public class WebApplication {
                         attributes.put("user", request.session(true).attribute("user"));
                         attributes.put("userType", request.session(true).attribute("userType"));
                         attributes.put("courses", courses);
+                        attributes.put("staffProposals", DatabaseDriver.getStaffProposals());
+                        attributes.put("sps", sps);
                         
 			return new ModelAndView(attributes, "src/requests.html");
 		}, new PebbleTemplateEngine());
@@ -606,7 +617,6 @@ public class WebApplication {
                         String courseName = request.queryParams("course-name");
                         Course course = DatabaseDriver.getCourse(courseName);
                         String resume = null;
-                        System.out.println(request.session(true).attribute("userID").toString());
                         CourseApplication application = new CourseApplication(course.getCourseID(),request.session(true).attribute("userID"));
                         application.addToDB();
                         
@@ -614,7 +624,9 @@ public class WebApplication {
                         
                         attributes.put("user", request.session(true).attribute("user"));
                         attributes.put("userType", request.session(true).attribute("userType"));
-                        
+                                              
+                        response.redirect("/requests");
+                        Spark.halt();
                         
 			return new ModelAndView(attributes, "src/apply.html");
 		}, new PebbleTemplateEngine());
@@ -661,35 +673,108 @@ public class WebApplication {
                             Spark.halt();
                         }
 			int courseID = Integer.parseInt(request.params(":courseID"));
-                    
+                        Course course = DatabaseDriver.getCourse(courseID);
+                                
                         Map<String, Object> attributes = new HashMap<>();
                         
-                        StaffProposal staffProposal = new StaffProposal(courseID);
+                        StaffProposal staffProposal = new StaffProposal(courseID, course.getCourseName());
+                        staffProposal.addToDB();
                         int proposalID = staffProposal.getProposalID();
                         
                         for(String i:request.queryParams()){
                             CourseApplication application = DatabaseDriver.getApplication(Integer.valueOf(i));
                             String key = i;
                             String val = request.queryParams(i);
-                            System.out.println(i + "," + request.queryParams(i));
 
                             if(val.equals("Reject")){
                                 application.setOutcome(false);
                                 application.updateInDB();
                             } else if(val.split("-")[0].equals("a")){
                                 int activityID = DatabaseDriver.getActivity(Integer.valueOf(val.split("-")[1])).getActivityID();
-                                StaffPlacement sp = new StaffPlacement(proposalID, application.getUserID(), activityID, "a");
+                                application.setPending(false);
+                                application.updateInDB();
+                                StaffPlacement sp = new StaffPlacement(courseID, course.getCourseName(), proposalID, application.getApplicationID(), application.getUserID(), activityID, "a");
+                                sp.setProposalID(proposalID);
                                 sp.addToDB();
                             } else if(val.split("-")[0].equals("t")){
                                 int taskID = DatabaseDriver.getTask(Integer.valueOf(val.split("-")[1])).getTaskID();
-                                StaffPlacement sp = new StaffPlacement(proposalID, application.getUserID(), taskID, "t");
+                                application.setPending(false);
+                                application.updateInDB();
+                                StaffPlacement sp = new StaffPlacement(courseID, course.getCourseName(), proposalID, application.getApplicationID(), application.getUserID(), taskID, "t");
+                                sp.setProposalID(proposalID);
                                 sp.addToDB();
                             }
                         }
                         
-                        staffProposal.addToDB();
+                        response.redirect("/requests");
+                        Spark.halt();
                         
                         return new ModelAndView(attributes, "src/viewApplications.html");
+		}, new PebbleTemplateEngine());
+                
+                get("/requests/:proposalID/viewStaffProposals", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+                        
+                        
+                    int proposalID = Integer.parseInt(request.params(":proposalID"));
+                        
+                        List<StaffPlacement> staffPlacements = DatabaseDriver.getStaffPlacements(proposalID);
+                    
+                        System.out.println(staffPlacements);
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+                        attributes.put("placements",staffPlacements);
+                        
+                        attributes.put("user", request.session(true).attribute("user"));
+                        attributes.put("userType", request.session(true).attribute("userType"));
+                    
+                        
+			return new ModelAndView(attributes, "src/viewPlacements.html");
+		}, new PebbleTemplateEngine());
+
+                post("/requests/:proposalID/viewStaffProposals", (request, response) -> {
+                        if (request.session(true).attribute("user") == null){
+                            response.redirect("/login");
+                            Spark.halt();
+                        }
+                        int proposalID = Integer.parseInt(request.params(":proposalID"));
+                    
+                        StaffProposal proposal = DatabaseDriver.getStaffProposal(proposalID);
+                        
+                        Map<String, Object> attributes = new HashMap<>();
+                        
+                        for(String i:request.queryParams()){
+                            String key = i;
+                            String val = request.queryParams(i);
+                            System.out.println(i + "," + request.queryParams(i));
+                            
+                            StaffPlacement placement = DatabaseDriver.getStaffPlacement(Integer.parseInt(key));
+                            CourseApplication application = DatabaseDriver.getApplication(placement.getApplicationID());
+                            
+                            if(val.equals("Reject")){
+                                application.setOutcome(false);
+                                application.setPending(true);
+                                application.updateInDB();
+                                placement.setPending(false);
+                                placement.setApproved(false);
+                                placement.updateInDB();
+                            } else if(val.equals("Approve")){
+                                application.setOutcome(true);
+                                application.setPending(false);
+                                application.updateInDB();
+                                placement.setPending(false);
+                                placement.setApproved(true);
+                                placement.updateInDB();
+                            } 
+                        }
+                        
+                        proposal.setPending(false);
+                        proposal.updateInDB();
+                        
+                        return new ModelAndView(attributes, "src/viewPlacements.html");
 		}, new PebbleTemplateEngine());
                 
                 get("/notPermitted", (request, response) -> {

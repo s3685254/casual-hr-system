@@ -1,0 +1,56 @@
+{% extends 'src/base.html' %}
+{% block content %}
+
+      <form method="post">
+<table class="table table-bordered">
+    <div class="table-responsive">
+    <thead class="thead-light">
+      <h2> Courses </h2>
+      <tr>
+        <th scope="col">Application ID</th>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Date Submitted</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for i in applications %}
+
+      <tr>
+        <td>{{i.applicationID}}</td>
+        <td>{{i.firstName}}</td>
+        <td>{{i.lastName}}</td>
+        <td>{{i.dateSubmitted}}</td>
+        <td>
+
+          <select id="{{i.applicationID}}" name="{{i.applicationID}}">
+            <option value="Reject">Reject</option>
+            <optgroup label="Tasks">
+              {% for j in tasks %}
+                <option value="t-{{j.taskID}}">{{j.time}} | {{j.day}}</option>
+              {% endfor %}
+            <optgroup label="Activities">
+              {% for j in activities %}
+                <option value="a-{{j.activityID}}">{{j.time}} | {{j.date}}</option>
+              {% endfor %}
+          </select>
+
+        </td>
+
+      </tr>
+      {% endfor %}
+
+
+
+
+    </tbody>
+  </table>
+
+        <input type="submit" value="Submit">
+
+                  </form>
+</div>
+
+{% endblock %}

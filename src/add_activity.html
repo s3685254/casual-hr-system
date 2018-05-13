@@ -1,0 +1,48 @@
+{% extends 'src/base.html' %}
+{% block content %}
+
+<h2> Add a new Activity </h2>
+<div style="padding:20px;">
+  <form method="post">
+
+<div style="width:250px">
+
+      <label for="activity-name">Activity Name</label>
+      <input class="form-control" type="text" value="" id="activity-name" name="activity-name">
+
+
+  <label for="staff">Staff</label>
+  <input class="form-control" type="number" id="staff" name="staff">
+
+  <label for="students">Students</label>
+  <input class="form-control" type="number" id="students" name="students">
+
+  <label for="location">Location</label>
+  <input class="form-control" type="text" id="location" name="location">
+
+  <label for="date">Date</label>
+  <input class="form-control" type="date" id="date" name="date">
+
+  <label for="date">Time</label>
+  <select class="form-control" id="time" name="time">
+    {% for i in timesAvailable %}
+      <option>
+        {{i}}
+      </option>
+      {% endfor %}
+  </select>
+
+  <label for="duration">Duration</label>
+  <select class="form-control" id="duration" name="duration">
+    {% for i in durationsAvailable %}
+      <option>
+        {{i}}
+      </option>
+      {% endfor %}
+  </select>
+
+</div>
+  <input class="form-control" type="submit" value="Submit" style="width:100px;margin:10px;">
+</form>
+</div>
+{% endblock %}

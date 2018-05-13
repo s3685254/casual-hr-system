@@ -4,12 +4,20 @@
 <div style="padding:10px;">
 <h2> Requests </h2>
 
+{% for i in sps %}
+Your application for {{i.courseName}} has been approved.<br>
+{% endfor %}
+
 {% if userType=="admin"%}
 <a href="/requests/apply" class="btn btn-primary optionbtn" role="button">Apply for a course.</a>
 <h2>Your Courses</h2>
 {% for i in courses %}
 <h3>{{i.courseName}}</h3>
 <a href="/requests/course/{{i.courseID}}" class="btn btn-primary optionbtn" role="button">View course applications.</a>
+{% endfor %}
+<h2>Staff Placement Proposals</h2>
+{% for i in staffProposals %}
+<a href="/requests/{{i.proposalID}}/viewStaffProposals">{{i.courseName}}</a>
 {% endfor %}
 {% endif %}
 
@@ -22,7 +30,9 @@
 {% endif %}
 
 {% if userType=="approvals"%}
-
+{% for i in staffProposals %}
+<a href="/requests/{{i.proposalID}}/viewStaffProposals">{{i.courseName}}</a>
+{% endfor %}
 {% endif %}
 
 {% if userType=="casual"%}

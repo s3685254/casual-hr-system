@@ -1,0 +1,44 @@
+{% extends 'src/base.html' %}
+{% block content %}
+
+<style>
+	.optionbtn{
+    display:inline-block;
+		padding-left:10px;
+	}
+</style>
+
+<a href="/add_course" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Course</a>
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <h2> Courses </h2>
+      <tr>
+        <th scope="col">Course ID</th>
+        <th scope="col">Course Code</th>
+        <th scope="col">Course Name</th>
+        <th scope="col">Course Coordinator</th>
+        <th scope="col">Start Date</th>
+        <th scope="col">End date</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in courses %}
+      <tr>
+        <td>{{i.courseID}}</td>
+        <td>{{i.courseCode}}</td>
+        <td>{{i.courseName}}</td>
+        <td>{{i.courseCoordinator}}</td>
+        <td>{{i.courseStartDate}}</td>
+        <td>{{i.courseEndDate}}</td>
+        <td><a href="courses/{{i.courseID}}" class="btn btn-primary optionbtn" role="button">View</a>
+        <a href="edit_course/{{i.courseID}}" class="btn btn-warning optionbtn" role="button"><span class="fa fa-edit"></span>Edit</a>
+        <a href="delete_course/{{i.courseID}}" class="btn btn-danger optionbtn" role="button"><span class="fa fa-trash"></span>Delete</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+{% endblock %}

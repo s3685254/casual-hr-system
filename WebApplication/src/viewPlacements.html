@@ -1,0 +1,47 @@
+{% extends 'src/base.html' %}
+{% block content %}
+
+<form method="post">
+<table class="table table-bordered">
+    <div class="table-responsive">
+    <thead class="thead-light">
+      <h2> Staff Proposed Placements </h2>
+      <tr>
+        <th scope="col">Proposal ID</th>
+        <th scope="col">Staff ID</th>
+        <th scope="col">Session ID</th>
+        <th scope="col">Options</th>
+      </tr>
+    </thead>
+    <tbody>
+
+      {% for i in placements %}
+
+      <tr>
+        <td>{{i.applicationID}}</td>
+        <td>{{i.staffID}}</td>
+        <td>{{i.activityID}}{{i.taskID}}</td>
+        <td>
+
+          <select id="{{i.placementID}}" name="{{i.placementID}}">
+            <option value="Reject">Reject</option>
+            <option value="Approve">Approve</option>
+          </select>
+
+        </td>
+
+      </tr>
+      {% endfor %}
+
+
+
+
+    </tbody>
+  </table>
+
+        <input type="submit" value="Submit">
+
+      </form>
+</div>
+
+{% endblock %}

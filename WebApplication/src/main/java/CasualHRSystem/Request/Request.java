@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package CasualHRSystem.Request;
 
 import com.j256.ormlite.field.DatabaseField;
 
-/**
- *
- * @author jye
- */
 public class Request {
     public static final String REQUEST_ID_FIELD_NAME = "requestID";
     public static final String USER_ID_FIELD_NAME = "userID";
@@ -46,7 +37,6 @@ public class Request {
        this.userID = userID;
        this.dateSubmitted = dateSubmitted;
        this.pending = true;
-       this.outcome = false;
    }
    
    void approveRequest(){

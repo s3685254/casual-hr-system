@@ -2,9 +2,10 @@
 {% block content %}
 
 <h2> Add a new Task </h2>
-
+<div style="padding:20px;">
 <form method="post">
 
+  <div style="width:250px">
 <div class="form-group row">
   <label for="task-name" class="col-6 col-form-label">Task Name</label>
   <input class="form-control" type="text" value="" id="task-name" name="task-name">
@@ -85,7 +86,8 @@
           </option>
   </select>
 </div>
-<input type="submit" value="Submit">
+</div>
+<input type="submit" value="Submit"  style="width:100px;margin:10px;">
 </form>
-
+</div>
 {% endblock %}

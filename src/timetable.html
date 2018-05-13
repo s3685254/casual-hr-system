@@ -1,0 +1,191 @@
+{% extends 'src/base.html' %}
+
+{% block content %}
+
+<style>
+td a {
+    display:block;
+    width:100%;
+}
+</style>
+
+<script>
+function timetableSwitch(){
+  document.getElementById('showTimetable').style.display='none';
+  document.getElementById('showTable').style.display='block';
+  document.getElementById('tables').style.display='none';
+  document.getElementById('timetable').style.display='block';
+}
+function tableSwitch(){
+  document.getElementById('showTable').style.display='none';
+  document.getElementById('showTimetable').style.display='block';
+  document.getElementById('timetable').style.display='none';
+  document.getElementById('tables').style.display='block';
+}
+</script>
+
+<a id = "showTimetable" href="#timetable" onclick="timetableSwitch()" style="display:none;"> Switch to timetable view</a>
+<a id = "showTable" href="#table" onclick="tableSwitch()"> Switch to table view</a>
+
+<script>
+
+$( document ).ready(function() {
+  $.getJSON( "/courses/{{courseID}}/getActivitiesData", function( data ) {
+
+      for(i=0, len = data.length; i<len;i++){
+            try{
+              var spanHeight = 42*data[i].duration;
+        document.getElementById(data[i].date+"-"+data[i].time).innerHTML="<div style='position:absolute; width: 105px; padding:1px; height: "+spanHeight.toString()+"px; background-color:#"+data[i].colour+";'>"+data[i].name+"</div>";
+      } catch(error){
+        console.log(error);
+      }
+      };
+
+  });
+});
+</script>
+
+<div id="tables" style="display:none;">
+
+  <h2>Tasks</h2>
+
+  <a href="/{{courseID}}/add_task" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Task</a>
+<div class="table-responsive">
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Task ID</th>
+        <th scope="col">Day</th>
+        <th scope="col">Time</th>
+        <th scope="col">Staff</th>
+        <th scope="col">Students</th>
+        <th scope="col">Location</th>
+        <th scope="col">Duration</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in tasks %}
+      <tr>
+        <td>{{i.taskID}}</td>
+        <td>{{i.day}}</td>
+        <td>{{i.time}}</td>
+        <td>{{i.numStaff}}</td>
+        <td>{{i.students}}</td>
+        <td>{{i.location}}</td>
+        <td>{{i.duration}}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2>Activities</h2>
+
+<a href="/{{courseID}}/add_activity" class="btn btn-primary optionbtn" style="float:right;" role="button"><span class="fa fa-plus"></span>Add Activity</a>
+<div class="table-responsive">
+<table class="table table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Activity ID</th>
+      <th scope="col">Date</th>
+      <th scope="col">Time</th>
+      <th scope="col">Staff</th>
+      <th scope="col">Students</th>
+      <th scope="col">Location</th>
+      <th scope="col">Duration</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in activities %}
+    <tr>
+      <td>{{i.activityID}}</td>
+      <td>{{i.date}}</td>
+      <td>{{i.time}}</td>
+      <td>{{i.numStaff}}</td>
+      <td>{{i.students}}</td>
+      <td>{{i.location}}</td>
+      <td>{{i.duration}}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+
+</div>
+
+<div id="timetable" style="width:800px;">
+  <h2> Course Timetable for this week. </h2>
+  <table class="table table-bordered">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Time Block</th>
+        {% for i in dates %}
+                <th scope="col" style="width:100px;">{{i}}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for i in times %}
+      <tr>
+        <th scope="table" class="table-light">{{i}}</th>
+        {% for j in dates %}
+          <td style="overflow: visible; padding: 0px;" id="{{j}}-{{i}}" name=""></td>
+        {% endfor %}
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+
+<!--
+
+<div class="modal fade" id="newElementModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header bg-inverse">
+        <h5 class="modal-title text-white" id="exampleModalLabel">Add New {{element_type}}</h5>
+        <button type="button" class="close" style="color:#fff" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+      </div>
+      <div class="modal-body">
+        {% for field in fielded %}
+			{% if field[1] %}
+				<div class="form-group row">
+				  <label for="example-text-input" class="col-2 col-form-label">{{field[0]}}</label>
+				  <div class="col-10">
+					<input class="form-control" type="text" value="" id="add-new-{{field[0]}}">
+				  </div>
+				</div>
+			{% endif %}
+        {% endfor %}
+
+
+
+        </form>
+      </div>
+      <div class="modal-footer" style="color:">
+        <button href="#" type="submit" id="submit_add_new" class="btn btn-primary">Submit</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="tableToolbar">
+  <span id="tableControls" style="float:right;">
+<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#newElementModal">          <span class="fa fa-plus"></span> Add new</button>
+  <span id="selectionOptions" style="display: none;">
+<button type="button" class="btn btn-warning"  data-toggle="modal" data-target="#editMultipleModal"><span class="fa fa-edit"></span> Edit Selected</button>
+  <button type="button" class="btn btn-danger"><span class="fa fa-trash"></span> Delete Selected</button>
+  </span>
+  <button type="button" class="btn btn-danger"><span class="fa fa-trash"></span> Delete all</button>
+
+  </span>
+
+</div>
+
+
+-->
+
+{% endblock %}

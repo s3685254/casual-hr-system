@@ -1,0 +1,34 @@
+{% extends "src/base.html" %}
+
+{%block content %}
+
+<!--<script>
+$(function() {
+  $('#submitLogin').click(function(){
+    var username = $('#username').val();
+    var password = $('#password').val();
+
+    $.ajax({
+      url: '/loginCheck',
+      data: {'username': username, 'password': password},
+			type: 'POST',
+      success: function(data) {
+        $('#userMessage').text(data['userMessage']);
+        document.getElementById("userMessage").style.display="block";
+      }
+    });
+  });
+});
+</script>
+-->
+
+<h1>Log In</h1>
+
+<form method="post">
+	Username: <input name="userid" id="username" type="text">
+	Password: <input name="password" id="password" type="password">
+	<p id="userMessage" class ="text-danger">{{userMessage}}</p>
+	<input href="#" type="submit" id="submitLogin" value="Log In">
+</form>
+
+{% endblock %}

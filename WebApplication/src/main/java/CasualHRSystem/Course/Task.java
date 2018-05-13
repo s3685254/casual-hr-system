@@ -250,6 +250,20 @@ public class Task {
     public void setTime(String time) {
         this.time = time;
     }
+
+    /**
+     * @return the duration
+     */
+    public String getDuration() {
+        return duration;
+    }
+
+    /**
+     * @param duration the duration to set
+     */
+    public void setDuration(String duration) {
+        this.duration = duration;
+    }
     
 }
 

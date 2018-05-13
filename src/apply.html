@@ -1,0 +1,15 @@
+{% extends 'src/base.html' %}
+{% block content %}
+  <h2> Apply for a course. </h2>
+<form method="post">
+<select id="course-name" name="course-name">
+  {% for i in courses %}
+<option value="{{i.courseName}}">
+  {{i.courseName}}
+</option>
+{% endfor %}
+</select><br>
+<input type="submit" value="Submit" />
+</form>
+
+{% endblock %}
