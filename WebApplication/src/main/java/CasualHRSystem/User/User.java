@@ -15,6 +15,11 @@ import java.sql.SQLException;
 import java.util.*;
 import sun.util.calendar.BaseCalendar;
 
+import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  *
  * @author jye
@@ -52,8 +57,39 @@ public class User {
         this.password = password;
         this.dateAdded = new Date().toString();
     }
+public class UserTest{
+    //Test to check login is possible with strange password.
+    @Before
+    public void setUp(){
+        User user = new User("test","user", "email@test.com","admin", "password");
+        user.addToDB();
+    }
+    
+    @Test
+    public void addToDBTest1(){
+        assertTrue(DatabaseDriver.login("email@test.com", "password")!=null);
+    }
+    
+    @Test //Testing password case sensitivity
+    public void addToDBTest2(){
+        User user;
+        user = DatabaseDriver.login("email@test.com", "PASSWORD");
+    }
 
+    @Test //Testing password verification works
+    public void addToDBTest2(){
+        User user 
+        assertTrue(DatabaseDriver.login("email@test.com", "asdfghjkl")!=null);
+    }
+    
+    @Test //Testing user data loaded correctly from database.
+    public void addToDBTest2(){
+        User user 
+        assertTrue(DatabaseDriver.login("email@test.com", "asdfghjkl")!=null);
+    }
+}
        public void addToDB(){
+          
         ConnectionSource conn = DatabaseDriver.connectToDB(DatabaseDriver.dbLoc);
         try{
             Dao<User, Integer> userDao = DaoManager.createDao(conn, User.class);

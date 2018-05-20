@@ -18,7 +18,7 @@ Jeremy Shou: ~20%
 Bryan Ng: ~10%
 Yuhao Xu: 0%
 
-This is based on contribution to group discussions and planning also.
+This is based on contribution to group discussions and planning also. Jye did all of the programming for assignment 2, as well as the charts.
 
 ## Shared Documents and Repository
 https://github.com/s3685254/casual-hr-system

@@ -23,6 +23,11 @@ import java.util.Scanner;
 import CasualHRSystem.Request.*;
 import java.sql.SQLException;
 
+import static org.junit.Assert.*;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
 /**
  *
  * @author jye
